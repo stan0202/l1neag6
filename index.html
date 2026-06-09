@@ -3276,15 +3276,7 @@ function killPlayer() {
     player.buffs.sk_charm = 0;
     player.skills.forEach(s => { if(DB.skills[s] && DB.skills[s].summon) player.buffs[s] = 0; });
     player.blessings = {};   // 死亡清空所有盟主祝福
-    let msg = "你的角色已經死亡。";
-    if (isSiegeArea(mapState.current)) {
-        msg += " （攻城區域死亡，不損失經驗值。）";
-    } else if (player.lv >= 5) {
-        player.exp = Math.max(0, player.exp - Math.floor(getExpReq(player.lv) * 0.01));
-        msg += " 失去 1% 經驗值。";
-    } else {
-        msg += " 4級以下死亡無懲罰。";
-    }
+    let msg = "你的角色已經死亡。（死亡不損失經驗值。）";
     
     // 顯示系統與戰鬥日誌
     logSys(`<span class="text-red-500 font-bold text-lg">${msg}</span>`);
