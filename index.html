@@ -1692,7 +1692,7 @@ let player = {
     base: { str:0, dex:0, con:0, int:0, wis:0, cha:8 }, bonus: 0, alloc: { str:0, dex:0, con:0, int:0, wis:0, cha:0 }, panacea: { str:0, dex:0, con:0, int:0, wis:0, cha:0 }, panaceaUsed: 0, junkPrefs: {}, bloodPledge: null, magicShieldCd: 0, lastMapByCat: {}, tracking: null, siege: { active:false, gateKilled:false, towerKilled:false, endTime:0, kills:0, result:null, cooldownUntil:0, rewardPending:false, victoryUntil:0, accCdUntil:0 },
     inv: [], eq: { wpn: null, arrow: null, helm: null, armor: null, shield: null, cloak: null, tshirt: null, gloves: null, boots: null, ring1: null, ring2: null, amulet: null, belt: null },
     skills: [], buffs: { haste: 0, brave: 0, blue: 0, cautious: 0, elfcookie: 0, poly: 0, shield: 0, sk_magic_shield: 0 }, poly: null,
-    summon: null, manualCd: {}, elfEle: null, hot: null,
+    summon: null, charmed: null, manualCd: {}, elfEle: null, hot: null,
     cds: { pot: 0, atkSk: 0, healSk: 0 }, dead: false, statuses: { stun: 0, freeze: 0, stone: 0, poison: 0, poisonDmg: 0, poisonTick: 0, burn: 0, burnDmg: 0, burnTick: 0, scald: 0, scaldDmg: 0, scaldTick: 0, silence: 0, paralyze: 0, magicseal: 0, armorBreak: 0, slowAtk: 0, cleave: 0 },
     d: { str:0, dex:0, con:0, int:0, wis:0, cha:8,
          meleeDmg: 0, meleeHit: 0, meleeCrit: 0,           // 近距離（力量）
@@ -2657,9 +2657,11 @@ function tick() {
         if(m._atkCd <= 0) {
             enemyPhysicalAttack(m, i);
             m._atkCd = Math.max(1, Math.floor(m.atkSpd * 10)) + slowAdd;
+            m._bluntDelayed = false;   // 攻擊後重置鈍擊延遲標記，下一週期可再被延遲一次
         }
 
         if(player.dead) break;
+        if(m.curHp <= 0) continue;   // 反擊使該怪在自己回合內死亡 → 跳過後續魔法施放
         if(m.st && (m.st.vacuum > 0 || m.st.magicseal > 0)) continue; // 真空 / 魔法封印：無法施放技能
         if(!m._magCd) m._magCd = {};
         ['mag','mag2','mag3'].forEach(mk => {
@@ -2686,7 +2688,7 @@ function tick() {
         if(player.dead) break;
     }
 
-    if(!player.dead) summonTick();
+    if(!player.dead) { summonTick(player.summon, () => { player.summon = null; }); summonTick(player.charmed, () => { player.charmed = null; }); }
     if(!player.dead) pledgeBlessTick();   // 生命的祝福：場上血盟怪物持續治療
     // 盟主祝福到期清理（每秒檢查；到期即移除並重算屬性）
     if(!player.dead && player.blessings && state.ticks % 10 === 0) {
@@ -3001,7 +3003,7 @@ function stretchHitValue(raw) {
     let hvInt = lo + ((Math.random() < (hv - lo)) ? 1 : 0);
     return Math.max(1, Math.min(20, hvInt));
 }
-function getPhysicalDmg(diceStr, target, wpn, arrowData, forceHeavy) {
+function getPhysicalDmg(diceStr, target, wpn, arrowData, forceHeavy, forceHit, forceLand) {
     let isRanged = !!(wpn && wpn.ranged);
     let hitBonus = (isRanged ? player.d.rangedHit : player.d.meleeHit) + player.d.extraHit;
     let dmgBonus = (isRanged ? player.d.rangedDmg : player.d.meleeDmg);
@@ -3015,6 +3017,8 @@ function getPhysicalDmg(diceStr, target, wpn, arrowData, forceHeavy) {
     let rollHit = roll(1, 20);
     let hit = false, heavy = false, graze = false, crush = false;
     if (forceHeavy) { hit = true; heavy = true; }   // 魔擊：必定命中且必定重擊
+    else if (forceHit) { hit = true; }   // 反擊：必定命中、必定非重擊
+    else if (forceLand) { hit = true; if (rollHit === 20) heavy = true; }   // 居合：必定命中，rollHit20 仍自然重擊；不擦傷
     else if (rollHit === 20) { hit = true; heavy = true; }
     else if (rollHit !== 1 && hitValue >= rollHit) hit = true;
     else if (rollHit === 19) {   // 擲到19依公式本應未命中時 → 擦傷
@@ -3248,6 +3252,37 @@ function rapidfireProc(arrowData) {
     }
     renderMobs();
 }
+// ===== 反擊（單手劍）：對攻擊者打一次「必定命中、必定非重擊、傷害 50%」的一般攻擊；只打攻擊者，不轉移 =====
+function procCounter(t) {
+    if (!t || t.curHp <= 0) return;
+    let wpn = player.eq.wpn ? DB.items[player.eq.wpn.id] : null;
+    let dice = wpn ? (t.s === 'L' ? wpn.dmgL : wpn.dmgS) : 2;
+    let res = getPhysicalDmg(dice, t, wpn, null, false, true);   // forceHeavy=false, forceHit=true
+    let dmg = Math.max(1, Math.floor(res.dmg * 0.50));           // 傷害只有原本 50%
+    t.curHp -= dmg;
+    t.justHit = getWpnEle(player.eq.wpn, wpn);
+    mobWake(t);
+    let mark = res.crit ? '（爆擊!）' : '';
+    logCombat(`<span class="font-bold" style="color:#fbbf24;text-shadow:0 0 6px #f59e0b;">【反擊】</span>對 <span class="${getMobColor(t.lv)}">${t.n}</span> 造成 ${dmg} 點傷害${mark}。`, 'player');
+    let idx = mapState.mobs.findIndex(m => m && m.uid === t.uid);
+    if (t.curHp <= 0) { if (idx !== -1) killMob(idx); }
+    else renderMobs();
+}
+// ===== 居合（武士刀）：對攻擊者打一次「必定命中、可自然重擊/爆擊」的一般攻擊；只打攻擊者 =====
+function procIai(t) {
+    if (!t || t.curHp <= 0) return;
+    let wpn = player.eq.wpn ? DB.items[player.eq.wpn.id] : null;
+    let dice = wpn ? (t.s === 'L' ? wpn.dmgL : wpn.dmgS) : 2;
+    let res = getPhysicalDmg(dice, t, wpn, null, false, false, true);   // forceLand=true：必定命中、可重擊/爆擊
+    t.curHp -= res.dmg;
+    t.justHit = getWpnEle(player.eq.wpn, wpn);
+    mobWake(t);
+    let mark = (res.heavy && res.crit) ? '會心一擊' : (res.crit ? '爆擊' : (res.heavy ? '重擊' : ''));
+    logCombat(`<span class="font-bold" style="color:#a5f3fc;text-shadow:0 0 6px #06b6d4;">【居合】</span>對 <span class="${getMobColor(t.lv)}">${t.n}</span> 造成 ${res.dmg} 點傷害${mark ? '（' + mark + '!）' : ''}。`, 'player');
+    let idx = mapState.mobs.findIndex(m => m && m.uid === t.uid);
+    if (t.curHp <= 0) { if (idx !== -1) killMob(idx); }
+    else renderMobs();
+}
 function playerAttack() {
     let target = getTarget();
     if(!target) return;
@@ -3356,6 +3391,19 @@ function playerAttack() {
         logCombat(`${killPrefix}命中 <span class="${getMobColor(target.lv)}">${target.n}</span>，造成 ${result.dmg} 點傷害。${ext}`, tag);
         if(_cleaveProc) logCombat('<span class="text-teal-300 font-bold">流暢的手感，讓你更快砍出下一刀</span>', 'player');
         
+        // 匕首出血：命中且目標存活時，依 力量/60 機率使敵人出血（每秒當時命中傷害20%、8秒、最多5層）
+        if (player.eq.wpn && weaponHasBleed(player.eq.wpn.id) && target.curHp > 0 && Math.random() < ((player.d.str || 0) / 60)) {
+            applyBleed(target, result.dmg);
+        }
+        // 單手鈍器鈍擊：命中使目標攻擊延遲 1 秒；每個敵人攻擊週期僅延遲一次（攻擊後重置），故最多 +1 秒、不會無限延遲
+        if (player.eq.wpn && target.curHp > 0 && getWeaponTags(player.eq.wpn.id).includes('單手鈍器')) {
+            target._bluntShow = state.ticks + 30;   // 圖示顯示計時器：每次命中刷新（穩定亮著不閃），停手約 3 秒後熄滅
+            if (!target._bluntDelayed) {
+                if (target._atkCd === undefined) target._atkCd = Math.max(1, Math.floor((target.atkSpd || 2) * 10));
+                target._atkCd += 10;   // 延遲 1 秒（10 ticks）
+                target._bluntDelayed = true;
+            }
+        }
         if (target.curHp <= 0) killMob(mapState.targetIdx);
         else renderMobs();
     } else {
@@ -3380,6 +3428,10 @@ function enemyPhysicalAttack(mob, idx, stunChance = 0) {
 
     if (roll(1, 100) <= player.d.er) {
         logCombat(`${player.name || '你'} 成功迴避攻擊。`, 'evade');
+        // 武士刀居合：無盾且敵人攻擊被迴避時，30% 對攻擊者打一次必定命中的一般攻擊
+        if (!player.dead && !player.eq.shield && mob.curHp > 0 && player.eq.wpn && getWeaponTags(player.eq.wpn.id).includes('武士刀') && Math.random() < 0.30) {
+            procIai(mob);
+        }
         return;
     }
 
@@ -3471,8 +3523,17 @@ function enemyPhysicalAttack(mob, idx, stunChance = 0) {
             logCombat(`<span class="${getMobColor(mob.lv)}">${mob.n}</span> 的衝擊使你暈眩了！`, 'enemy');
         }
         else updateUI();
+
+        // 單手劍反擊：受到敵人一般攻擊命中時觸發。一般 30% 機率；若裝備盾牌且本次觸發格檔(blocked)則必定反擊
+        if (!player.dead && mob.curHp > 0 && player.eq.wpn && getWeaponTags(player.eq.wpn.id).includes('單手劍')) {
+            if (Math.random() < (blocked ? 1 : 0.30)) procCounter(mob);
+        }
     } else {
         logCombat(`<span class="${getMobColor(mob.lv)}">${mob.n}</span> 的攻擊未命中。`, 'miss');
+        // 武士刀居合：無盾且敵人攻擊未命中時，30% 對攻擊者打一次必定命中的一般攻擊
+        if (!player.dead && !player.eq.shield && mob.curHp > 0 && player.eq.wpn && getWeaponTags(player.eq.wpn.id).includes('武士刀') && Math.random() < 0.30) {
+            procIai(mob);
+        }
     }
 }
 
@@ -3482,6 +3543,7 @@ function killPlayer() {
     // 死亡時清除所有召喚物與召喚 buff（迷魅術/造屍術/召喚屬性精靈/召喚強力屬性精靈一致處理），
     // 與復活流程同步，避免狀態殘留；復活後由自動施放重新召喚。
     player.summon = null;
+    player.charmed = null;
     player.buffs.sk_charm = 0;
     player.skills.forEach(s => { if(DB.skills[s] && DB.skills[s].summon) player.buffs[s] = 0; });
     player.blessings = {};   // 死亡清空所有盟主祝福
@@ -3883,7 +3945,7 @@ function checkLvUp() {
 function revive() {
     player.dead = false;
     player.statuses = { stun: 0, freeze: 0, stone: 0, poison: 0, poisonDmg: 0, poisonTick: 0, burn: 0, burnDmg: 0, burnTick: 0, scald: 0, scaldDmg: 0, scaldTick: 0, silence: 0, paralyze: 0, magicseal: 0 };  // 復活清除所有異常(含中毒/灼燒/燙傷)，避免復活後立即被持續傷害再次擊殺
-    player.summon = null; player.manualCd = {}; player.hot = null; player.buffs.sk_charm = 0;
+    player.summon = null; player.charmed = null; player.manualCd = {}; player.hot = null; player.buffs.sk_charm = 0;
     player.skills.forEach(s => { if(DB.skills[s] && DB.skills[s].summon) player.buffs[s] = 0; });   // 清除召喚 buff，避免復活後召喚消失卻長時間不自動重新召喚
     document.getElementById('btn-revive').classList.add('hidden');
     { let ip = document.getElementById('btn-revive-inplace'); if(ip) ip.classList.add('hidden'); }
@@ -3923,7 +3985,7 @@ function reviveInPlace() {
     player.dead = false;
     player.statuses = { stun: 0, freeze: 0, stone: 0, poison: 0, poisonDmg: 0, poisonTick: 0, burn: 0, burnDmg: 0, burnTick: 0, scald: 0, scaldDmg: 0, scaldTick: 0, silence: 0, paralyze: 0, magicseal: 0 };  // 復活清除所有異常(含中毒/灼燒/燙傷)，避免死亡迴圈
     player.hp = Math.min(player.mhp, roll(1, 200));   // 返生術/復活卷軸相同：1~200 隨機 HP、不恢復 MP
-    player.summon = null; player.manualCd = {}; player.hot = null; player.buffs.sk_charm = 0;
+    player.summon = null; player.charmed = null; player.manualCd = {}; player.hot = null; player.buffs.sk_charm = 0;
     player.skills.forEach(s => { if(DB.skills[s] && DB.skills[s].summon) player.buffs[s] = 0; });   // 清除召喚 buff，避免復活後召喚消失卻長時間不自動重新召喚
     document.getElementById('btn-revive').classList.add('hidden');
     { let ip = document.getElementById('btn-revive-inplace'); if(ip) ip.classList.add('hidden'); }
@@ -4022,6 +4084,14 @@ function tryInstakill(m, ik, skillName, idx) {
     killMob(idx);
     return true;
 }
+// 出血：對怪物施加一層出血（每秒造成 hitDmg 的 20%，持續 8 秒）。最多 5 層，已滿時新層取代最舊層。
+function applyBleed(m, hitDmg) {
+    if(!m.bleeds) m.bleeds = [];
+    let dps = Math.max(1, Math.floor(hitDmg * 0.20));
+    if(m.bleeds.length >= 5) m.bleeds.shift();          // 已 5 層：移除最舊的，由新層取代
+    m.bleeds.push({ dmg: dps, ticksLeft: 80 });          // 8 秒 = 80 ticks
+    logCombat(`<span class="${getMobColor(m.lv)}">${m.n}</span> 陷入出血（${m.bleeds.length} 層，每秒 ${dps}）。`, 'player');
+}
 // 每 tick 處理怪物身上的狀態（倒數、中毒 DoT）。回傳 true 代表該怪物已死亡。
 function processMobStatusTick(m, i) {
     if(!m.st) { m.st = newMobStatus(); return false; }
@@ -4036,6 +4106,22 @@ function processMobStatusTick(m, i) {
             m.curHp -= s.poisonDmg; m.justHit = 'magic'; mobWake(m);
             logCombat(`<span class="${getMobColor(m.lv)}">${m.n}</span> 受到中毒傷害 ${s.poisonDmg} 點。`, 'magic');
             if(m.curHp <= 0) { killMob(i); return true; }
+        }
+    }
+    // 出血 DoT：可疊 5 層，每層各自獨立計時，每秒(10 ticks)造成一次傷害；同 tick 觸發的多層合併為一次顯示
+    if(m.bleeds && m.bleeds.length) {
+        let bleedTotal = 0;
+        for(let bi = m.bleeds.length - 1; bi >= 0; bi--) {
+            let b = m.bleeds[bi];
+            b.ticksLeft--;
+            if(b.ticksLeft % 10 === 0) bleedTotal += b.dmg;
+            if(b.ticksLeft <= 0) m.bleeds.splice(bi, 1);
+        }
+        if(bleedTotal > 0) {
+            m.curHp -= bleedTotal; m.justHit = 'magic'; mobWake(m);
+            logCombat(`<span class="${getMobColor(m.lv)}">${m.n}</span> 受到出血傷害 ${bleedTotal} 點（${m.bleeds.length} 層）。`, 'player');
+            if(m.curHp <= 0) { killMob(i); return true; }
+            if(!state.ff) renderMobs();
         }
     }
     return m.curHp <= 0;
@@ -4089,8 +4175,8 @@ function summonElementDamage(dice, ele, t, flatBonus, mult) {
     else if(ele === 'water' && t.e === 'fire') fixed = 6;
     return Math.max(1, Math.floor(base * mrFactor) - (t.dr || 0)) + fixed;
 }
-function summonAttack() {
-    let sm = player.summon; if(!sm) return;
+function summonAttack(sm) {
+    if(!sm) return;
     let t = getTarget(); if(!t) return;
     let cha = player.d.cha || 0;
     let idx = mapState.mobs.findIndex(m => m && m.uid === t.uid);
@@ -4133,13 +4219,13 @@ function summonAttack() {
     if(t.curHp <= 0 && idx !== -1) killMob(idx);
     else renderMobs();
 }
-function summonTick() {
-    let sm = player.summon; if(!sm) return;
+function summonTick(sm, clearFn) {
+    if(!sm) return;
     if(state.ticks >= sm.endTick || (sm.skId && (player.buffs[sm.skId] || 0) <= 0)) {
         logCombat(`<span class="text-purple-300">${sm.n}</span> 消失了。`, 'magic');
-        player.summon = null; return;
+        clearFn(); return;
     }
-    if(--sm.cd <= 0) { sm.cd = sm.interval; summonAttack(); }
+    if(--sm.cd <= 0) { sm.cd = sm.interval; summonAttack(sm); }
     // 觸發技：每 5 秒(50 tick)判定一次，傷害 = roll(骰子)+魅力
     if(sm.proc) {
         if(--sm.proc.cdCur <= 0) {
@@ -4200,9 +4286,8 @@ function manualCast(skId) {
         player.mp -= cost; cost = 0;
         if(abnormalMagicHit(t)) {
             let idx = mapState.mobs.findIndex(m => m && m.uid === t.uid);
-            player.skills.forEach(s => { let d = DB.skills[s]; if(d && d.summon) player.buffs[s] = 0; });
             player.buffs['sk_charm'] = 3600;
-            player.summon = {
+            player.charmed = {
                 skId:'sk_charm', n:'迷魅：' + t.n, dmgDice: t.dmg && t.dmg[1] ? t.dmg : [1,4],
                 interval: Math.max(10, Math.floor((t.atkSpd || 2) * 10)), ele:'none', kind:'melee',
                 hitBonus:(t.hit||0), proc:null, cd:10, endTick: state.ticks + 36000
@@ -5214,10 +5299,11 @@ function renderStatusEffects() {
             // 迷魅術 / 各召喚術：狀態欄改顯示召喚物名稱（近戰召喚附上隨從數字 floor(魅力/6)，為1則不顯示）；
             //   召喚物不存在（死亡解除 / 被新召喚取代 / 已消失）時就不顯示，避免殘留。
             if(k === 'sk_charm' || DB.skills[k].summon) {
-                if(player.summon && player.summon.skId === k) {
-                    let cnt = (player.summon.kind === 'melee' && k !== 'sk_charm') ? Math.floor((player.d.cha||0)/6) : 0;
+                let _creature = (k === 'sk_charm') ? player.charmed : player.summon;
+                if(_creature && _creature.skId === k) {
+                    let cnt = (_creature.kind === 'melee' && k !== 'sk_charm') ? Math.floor((player.d.cha||0)/6) : 0;
                     let suffix = cnt > 1 ? ` ${cnt}` : '';
-                    buffs.push(`<span class="${getBuffColor(k, DB.skills[k])} font-bold">${player.summon.n}${suffix}</span>`);
+                    buffs.push(`<span class="${getBuffColor(k, DB.skills[k])} font-bold">${_creature.n}${suffix}</span>`);
                 }
                 continue;
             }
@@ -5375,6 +5461,7 @@ function renderMobs() {
                         <div class="flex justify-center mb-3">
                             <img src="${imgUrl}" alt="${m.n}" onerror="this.onerror=null; this.src='https://placehold.co/100x100/1e293b/ffffff?text=?';" class="w-24 h-24 p-1 object-contain pointer-events-none ${hitClass}">
                         </div>
+                        ${((m.bleeds && m.bleeds.length) || (m._bluntShow && state.ticks < m._bluntShow)) ? `<div class="flex justify-center items-center gap-2 mb-1">${(m.bleeds && m.bleeds.length) ? `<span class="text-[11px] font-bold text-red-400" title="出血層數">🩸×${m.bleeds.length}</span>` : ''}${(m._bluntShow && state.ticks < m._bluntShow) ? `<span class="text-[11px] font-bold text-amber-300" title="鈍擊：攻擊延遲中">🔨鈍</span>` : ''}</div>` : ''}
                         <div class="w-full bg-slate-700 h-2.5 rounded-full overflow-hidden">
                             <div class="bg-red-500 h-full transition-all" style="width:${pct}%"></div>
                         </div>
@@ -5568,34 +5655,30 @@ function summonBuffChecked() {
 }
 function updateSummonLock() {
     let checkedBuff = summonBuffChecked();
-    let charmActive = !!(player.buffs && player.buffs.sk_charm > 0);
-    // 4 個召喚增益勾選框：已勾選一個→其餘鎖定；或迷魅生效→全部鎖定（仍保留各自的等級/條件不可用狀態）
+    // 4 個召喚增益勾選框：已勾選一個→其餘三個鎖定（迷魅可與召喚並存，不互鎖）
     SUMMON_BUFF_IDS.forEach(id => {
         let c = document.getElementById('auto-sk-' + id);
         if (!c) return;
         let unavail = c.dataset.unavail === '1';
-        let lock = checkedBuff ? (checkedBuff !== id) : charmActive;
+        let lock = checkedBuff ? (checkedBuff !== id) : false;
         c.disabled = unavail || lock;
         let lbl = c.closest('label');
         if (lbl) lbl.classList.toggle('opacity-50', unavail || lock);
     });
-    // 迷魅手動按鈕：任一召喚增益被勾選→鎖定（灰色不可選）
+    // 迷魅按鈕：不再被召喚鎖定（可並存），僅受自身等級/條件限制
     let charmBtn = document.getElementById('manual-btn-sk_charm');
     if (charmBtn) {
         let unavail = charmBtn.dataset.unavail === '1';
-        let lock = !!checkedBuff;
-        charmBtn.disabled = unavail || lock;
-        charmBtn.classList.toggle('opacity-50', unavail || lock);
-        charmBtn.classList.toggle('cursor-not-allowed', unavail || lock);
+        charmBtn.disabled = unavail;
+        charmBtn.classList.toggle('opacity-50', unavail);
+        charmBtn.classList.toggle('cursor-not-allowed', unavail);
     }
 }
 function onSummonToggle(sid) {
     let c = document.getElementById('auto-sk-' + sid);
     if (c && c.checked) {
-        // 只能勾選一個：取消其他召喚增益，並解除迷魅，確保互斥一致
+        // 4 召喚互斥：只能勾一個，取消其他三個（不影響迷魅，可並存）
         SUMMON_BUFF_IDS.forEach(id => { if (id !== sid) { let o = document.getElementById('auto-sk-' + id); if (o) o.checked = false; } });
-        if (player.buffs) player.buffs.sk_charm = 0;
-        if (player.summon && player.summon.skId === 'sk_charm') player.summon = null;
     }
     updateSummonLock();
 }
@@ -5662,6 +5745,19 @@ function formatBonus(val) {
     return val >= 0 ? `+${val}` : `${val}`;
 }
 
+// 武器種類標籤（單手劍 / 武士刀 / 匕首）；武士刀與瑟魯基之劍同時具單手劍與武士刀
+const WEAPON_TAGS = {
+    wpn_katana: ['單手劍','武士刀'], wpn_siruge: ['單手劍','武士刀'],
+    wpn_dagger2: ['匕首'], wpn_dagger1: ['匕首'], wpn_11: ['匕首'], wpn_33: ['匕首'],
+    wpn_longsword: ['單手劍'], wpn_9: ['單手劍'], wpn_scimitar: ['單手劍'], wpn_26: ['單手劍'],
+    wpn_elfsword: ['單手劍'], wpn_27: ['單手劍'], wpn_shortsword: ['單手劍'], wpn_redknight: ['單手劍'],
+    wpn_invader: ['單手劍'], wpn_damascus: ['單手劍'], wpn_34: ['單手劍'], wpn_35: ['單手劍'],
+    wpn_36: ['單手劍'], wpn_rapier: ['單手劍'], wpn_mailbreaker: ['單手劍'], wpn_silversword: ['單手劍'], wpn_37: ['單手劍'],
+    wpn_21: ['矛'], wpn_24: ['矛'], wpn_25: ['矛'], wpn_28: ['矛'], wpn_39: ['矛'], wpn_40: ['矛'], wpn_41: ['矛'], wpn_17: ['矛'], wpn_4: ['矛'],
+    wpn_20: ['單手鈍器'], wpn_10: ['單手鈍器'], wpn_13: ['單手鈍器'], wpn_alien: ['單手鈍器'], wpn_1: ['單手鈍器'], wpn_2: ['單手鈍器']
+};
+function getWeaponTags(id){ return WEAPON_TAGS[id] || []; }
+function weaponHasBleed(id){ let t = getWeaponTags(id); return t.includes('匕首') || t.includes('矛'); }   // 匕首與矛皆帶出血特效
 function buildItemDescHTML(item) {
     let d = DB.items[item.id];
     if(!d) return '';
@@ -5733,6 +5829,10 @@ function buildItemDescHTML(item) {
         if (d.block)                _eff.push('格檔：' + d.block + '%');
         if (d.immStone)             _eff.push('免疫石化');
         if (d.eff === 'magicstrike') _eff.push('魔擊');
+        if (typeof weaponHasBleed === 'function' && weaponHasBleed(item.id)) _eff.push('出血');
+        if (typeof getWeaponTags === 'function' && getWeaponTags(item.id).includes('單手劍')) _eff.push('反擊');
+        if (typeof getWeaponTags === 'function' && getWeaponTags(item.id).includes('武士刀')) _eff.push('居合');
+        if (typeof getWeaponTags === 'function' && getWeaponTags(item.id).includes('單手鈍器')) _eff.push('鈍擊');
         if (typeof WAND_LIGHTARROW_IDS !== 'undefined' && WAND_LIGHTARROW_IDS.includes(item.id)) _eff.push('共鳴');
         if (_eff.length) desc += `<br><span class="text-rose-300 font-bold">特效：${_eff.join(' / ')}</span>`;
     }
@@ -7766,7 +7866,7 @@ function startGame() {
     player.lv = 1; player.exp = 0; player.gold = 1000;
     player.inv = []; player.eq = { wpn: null, helm: null, armor: null, shield: null, cloak: null, tshirt: null, gloves: null, boots: null, ring1: null, ring2: null, amulet: null, belt: null }; player.junkPrefs = {};
     player.skills = [];
-    player.summon = null; player.manualCd = {}; player.hot = null; player.elfEle = null; player.buffs = { haste: 0, brave: 0, blue: 0, cautious: 0, elfcookie: 0, poly: 0, shield: 0 };
+    player.summon = null; player.charmed = null; player.manualCd = {}; player.hot = null; player.elfEle = null; player.buffs = { haste: 0, brave: 0, blue: 0, cautious: 0, elfcookie: 0, poly: 0, shield: 0 };
     
     ['set-haste', 'set-brave', 'set-blue', 'set-cautious', 'set-poly', 'set-auto-buy-pot', 'set-auto-buy-arrow'].forEach(id => {
         let el = document.getElementById(id);
@@ -7939,10 +8039,11 @@ function loadGame() {
         if(player.magicShieldCd === undefined) player.magicShieldCd = 0;   // 相容舊存檔：魔法屏障抵擋後冷卻
         // 修復舊版「召喚死亡後 buff 未清除」卡關：載入時若目前沒有召喚物，清除殘留的召喚 buff，
         // 讓自動施放能立即重新召喚（不必等死亡復活或 buff 自然倒數）。
+        if(player.charmed === undefined) player.charmed = null;   // 相容舊存檔：迷魅獨立槽位
         if(!player.summon && player.buffs) {
             (player.skills || []).forEach(s => { if(DB.skills[s] && DB.skills[s].summon) player.buffs[s] = 0; });
-            player.buffs.sk_charm = 0;
         }
+        if(!player.charmed && player.buffs) player.buffs.sk_charm = 0;
         if(player.bloodPledge === undefined) player.bloodPledge = null;   // 相容舊存檔：血盟陣營（null/esti/tros）
         if(player.name === undefined) player.name = null;   // 相容舊存檔：未取名則狀態欄顯示「點擊取名」
         if(!player.blessings || typeof player.blessings !== 'object') player.blessings = {};   // 相容舊存檔：盟主祝福
