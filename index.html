@@ -488,11 +488,11 @@ const DB = {
         "wpn_katana": { n: "武士刀", type: "wpn", dmgS: 10, dmgL: 12, hit: 1, spd: 1.1, req: "knight,elf", safe: 6, p: 28200, gachaWeight: 10 },
         "wpn_longsword": { n: "長劍", type: "wpn", dmgS: 8, dmgL: 12, hit: 0, spd: 1.1, req: "knight,elf", safe: 6, p: 4200, gachaWeight: 50 },
         "wpn_1": { n: "斧", type: "wpn", dmgS: 3, dmgL: 5, hit: 0, spd: 1.2, req: "all", safe: 6, p: 28, gachaWeight: 100 },
-        "wpn_2hsword": { n: "雙手劍", type: "wpn", w2h: true,dmgS: 14, dmgL: 16, hit: 0, spd: 0.9, req: "knight", safe: 6, p: 25200, gachaWeight: 10 },
+        "wpn_2hsword": { n: "雙手劍", type: "wpn", w2h: true,dmgS: 14, dmgL: 16, hit: 0, spd: 0.9, req: "knight", safe: 6, p: 25200, eff: "cleave", gachaWeight: 10 },
         "wpn_2": { n: "釘錘", type: "wpn", dmgS: 6, dmgL: 8, hit: 0, spd: 1.3, req: "all", safe: 6, p: 133, gachaWeight: 100 },
         "wpn_3": { n: "弓", type: "wpn", isBow: true, ranged: true, dmgS: 2, dmgL: 2, hit: 0, spd: 1.0, req: "all", safe: 6, p: 70, gachaWeight: 100 },
         "wpn_4": { n: "矛", type: "wpn", dmgS: 6, dmgL: 8, hit: 0, spd: 1.2, req: "all", safe: 6, p: 120, gachaWeight: 100 },
-        "wpn_battleaxe": { n: "戰斧", type: "wpn", w2h: true, dmgS: 8, dmgL: 8, hit: 0, spd: 1.0, req: "knight,elf", safe: 6, p: 980, gachaWeight: 100 },
+        "wpn_battleaxe": { n: "戰斧", type: "wpn", w2h: true, dmgS: 8, dmgL: 8, hit: 0, spd: 1.0, req: "knight,elf", safe: 6, p: 980, gachaWeight: 100, eff: "crush" },
         "wpn_5": { n: "箭", type: "wpn", isArrow: true, dmgS: 6, dmgL: 5, hit: 0, p: 0, gachaWeight: 0 },
         "wpn_6": { n: "巴迪須", type: "wpn", w2h: true, dmgS: 4, dmgL: 6, hit: 0, spd: 1.0, req: "knight", safe: 6, p: 56, gachaWeight: 100, eff: "pierce", pierceChance: 35 },
         "wpn_7": { n: "柴刀", type: "wpn", w2h: true, dmgS: 4, dmgL: 11, hit: 0, spd: 1.0, req: "knight", safe: 6, p: 252, gachaWeight: 100, eff: "pierce", pierceChance: 35 },
@@ -511,12 +511,12 @@ const DB = {
         "wpn_16": { n: "戟", type: "wpn", w2h: true, dmgS: 10, dmgL: 6, hit: 0, spd: 1.0, req: "knight", safe: 6, p: 2800, gachaWeight: 50, eff: "pierce", pierceChance: 60 },
         "wpn_17": { n: "槍", type: "wpn", w2h: true, dmgS: 6, dmgL: 8, hit: 0, spd: 1.0, req: "knight", safe: 6, p: 84, gachaWeight: 100 },
         "wpn_18": { n: "露西錘", type: "wpn", w2h: true, dmgS: 9, dmgL: 11, hit: 0, spd: 1.0, req: "knight", safe: 6, p: 14000, gachaWeight: 30, eff: "pierce", pierceChance: 50 },
-        "wpn_19": { n: "戰錘", type: "wpn", w2h: true, dmgS: 7, dmgL: 9, hit: 0, spd: 1.1, req: "knight,elf", safe: 6, p: 1400, gachaWeight: 100 },
+        "wpn_19": { n: "戰錘", type: "wpn", w2h: true, dmgS: 7, dmgL: 9, hit: 0, spd: 1.1, req: "knight,elf", safe: 6, p: 1400, gachaWeight: 100, eff: "crush" },
         "wpn_20": { n: "流星錘", type: "wpn", dmgS: 9, dmgL: 10, hit: 0, spd: 1.3, req: "knight,elf", safe: 6, p: 4900, gachaWeight: 50 },
         "wpn_21": { n: "帕提森", type: "wpn", dmgS: 6, dmgL: 6, hit: 0, spd: 1.2, req: "knight,elf", safe: 6, p: 700, gachaWeight: 100 },
         "wpn_scimitar": { n: "彎刀", type: "wpn", dmgS: 8, dmgL: 8, hit: 0, spd: 1.1, req: "all", safe: 6, p: 1400, gachaWeight: 100 },
         "wpn_22": { n: "銀箭", type: "wpn", isArrow: true, dmgS: 7, dmgL: 6, hit: 0, p: 0, unBonus: true, gachaWeight: 0 },
-        "wpn_23": { n: "侏儒鐵斧", type: "wpn", w2h: true, dmgS: 8, dmgL: 14, hit: 0, spd: 1.0, req: "knight", safe: 6, p: 1376, gachaWeight: 100 },
+        "wpn_23": { n: "侏儒鐵斧", type: "wpn", w2h: true, dmgS: 8, dmgL: 14, hit: 0, spd: 1.0, req: "knight", safe: 6, p: 1376, gachaWeight: 100, eff: "crush" },
         "wpn_24": { n: "精靈之矛", type: "wpn", dmgS: 7, dmgL: 8, hit: 0, spd: 1.2, req: "all", safe: 6, p: 1180, unBonus: true, gachaWeight: 100 },
         "wpn_25": { n: "歐西斯之矛", type: "wpn", dmgS: 4, dmgL: 6, hit: 0, spd: 1.2, req: "all", safe: 6, p: 16, gachaWeight: 100 },
         "wpn_26": { n: "小侏儒短劍", type: "wpn", dmgS: 7, dmgL: 8, hit: 0, spd: 1.0, req: "all", safe: 6, p: 58, gachaWeight: 100 },
@@ -542,18 +542,18 @@ const DB = {
         "wpn_mailbreaker": { n: "鎖子甲破壞者", type: "wpn", dmgS: 4, dmgL: 5, hit: 10, spd: 1.1, req: "all", safe: 6, p: 12000, unBonus: true, gachaWeight: 10 },
         "wpn_silversword": { n: "銀長劍", type: "wpn", dmgS: 8, dmgL: 12, hit: 0, spd: 1.1, req: "all", safe: 6, p: 18200, unBonus: true, gachaWeight: 50 },
         "wpn_37": { n: "銀劍", type: "wpn", dmgS: 7, dmgL: 7, hit: 0, spd: 1.1, req: "all", safe: 6, p: 2520, unBonus: true, gachaWeight: 70 },
-        "wpn_oakwand": { n: "橡木魔法杖", type: "wpn", dmgS: 3, dmgL: 4, hit: 0, spd: 1.0, req: "all", safe: 6, p: 330, gachaWeight: 100 },
-        "wpn_38": { n: "美基魔法杖", type: "wpn", dmgS: 4, dmgL: 5, hit: 0, spd: 1.0, req: "mage", safe: 6, p: 3500, gachaWeight: 100 },
-        "wpn_witchwand": { n: "巫術魔法杖", type: "wpn", dmgS: 2, dmgL: 3, hit: 0, mdmg: 1, spd: 1.0, req: "mage", safe: 6, p: 12600, gachaWeight: 50 },
-        "wpn_strwand": { n: "力量魔法杖", type: "wpn", dmgS: 9, dmgL: 9, hit: 0, dmgBonus: 3, mdmg: -2, str: 3, spd: 1.0, req: "mage", safe: 6, p: 71500, gachaWeight: 10 },
+        "wpn_oakwand": { n: "橡木魔法杖", type: "wpn", dmgS: 3, dmgL: 4, hit: 0, spd: 1.0, req: "all", safe: 6, p: 330, gachaWeight: 100, extraMpPerEn: 1 },
+        "wpn_38": { n: "美基魔法杖", type: "wpn", dmgS: 4, dmgL: 5, hit: 0, spd: 1.0, req: "mage", safe: 6, p: 3500, gachaWeight: 100, extraMpPerEn: 1 },
+        "wpn_witchwand": { n: "巫術魔法杖", type: "wpn", dmgS: 2, dmgL: 3, hit: 0, mdmg: 1, spd: 1.0, req: "mage", safe: 6, p: 12600, gachaWeight: 50, extraMpPerEn: 1 },
+        "wpn_strwand": { n: "力量魔法杖", type: "wpn", dmgS: 9, dmgL: 9, hit: 0, dmgBonus: 3, mdmg: -2, str: 3, spd: 1.0, req: "mage", safe: 6, p: 71500, meleeHitPerEn: 1, gachaWeight: 10 },
         "wpn_manawand": { n: "瑪那魔杖", type: "wpn", dmgS: 3, dmgL: 3, hit: -1, spd: 1.0, req: "mage", safe: 6, p: 18000, eff: "mp_drain", gachaWeight: 10 },
-        "wpn_crystalwand": { n: "水晶魔杖", type: "wpn", dmgS: 1, dmgL: 1, hit: 0, spd: 1.0, req: "mage", safe: 6, p: 36000, mpR: 10, gachaWeight: 20 },
+        "wpn_crystalwand": { n: "水晶魔杖", type: "wpn", dmgS: 1, dmgL: 1, hit: 0, spd: 1.0, req: "mage", safe: 6, p: 36000, mpR: 10, mpROverSafe: 2, gachaWeight: 20 },
         "wpn_39": { n: "潘的角", type: "wpn", dmgS: 3, dmgL: 4, hit: 0, spd: 1.2, req: "all", safe: 6, p: 10, gachaWeight: 100 },
         "wpn_40": { n: "覆上米索莉的角", type: "wpn", dmgS: 4, dmgL: 4, hit: 0, spd: 1.2, req: "all", safe: 6, p: 178, unBonus: true, gachaWeight: 100 },
         "wpn_41": { n: "覆上奧里哈魯根的角", type: "wpn", dmgS: 7, dmgL: 8, hit: 0, spd: 1.2, req: "all", safe: 6, p: 1430, unBonus: true, gachaWeight: 100 },
-        "wpn_giantaxe": { n: "巨斧", type: "wpn", w2h: true, dmgS: 8, dmgL: 14, hit: 0, spd: 1.0, req: "knight", safe: 6, p: 18200, gachaWeight: 50 },
-        "wpn_berserker": { n: "狂戰士斧", type: "wpn", w2h: true, dmgS: 9, dmgL: 9, hit: 0, spd: 0.8, req: "knight", safe: 6, p: 13520, gachaWeight: 10 },
-		"wpn_silveraxe": { n: "銀斧", type: "wpn", w2h: true, dmgS: 8, dmgL: 14, hit: 0, spd: 1.0, req: "knight", safe: 6, p: 11200, unBonus: true, gachaWeight: 20 },
+        "wpn_giantaxe": { n: "巨斧", type: "wpn", w2h: true, dmgS: 8, dmgL: 14, hit: 0, spd: 1.0, req: "knight", safe: 6, p: 18200, gachaWeight: 50, eff: "crush" },
+        "wpn_berserker": { n: "狂戰士斧", type: "wpn", w2h: true, dmgS: 9, dmgL: 9, hit: 0, spd: 0.8, req: "knight", safe: 6, p: 13520, gachaWeight: 10, eff: "crush" },
+		"wpn_silveraxe": { n: "銀斧", type: "wpn", w2h: true, dmgS: 8, dmgL: 14, hit: 0, spd: 1.0, req: "knight", safe: 6, p: 11200, unBonus: true, gachaWeight: 20, eff: "crush" },
         "hlm_elf": { n: "精靈皮盔", type: "arm", slot: "helm", ac: 1, req: "elf,mage", safe: 6, p: 120, gachaWeight: 100 },
         "hlm_oasis": { n: "歐西斯頭盔", type: "arm", slot: "helm", ac: 1, req: "all", safe: 4, p: 10, gachaWeight: 100 },
         "hlm_gnome": { n: "侏儒鐵盔", type: "arm", slot: "helm", ac: 2, req: "all", safe: 4, p: 30, gachaWeight: 100 },
@@ -642,23 +642,23 @@ const DB = {
         "glv_dk": { n: "死亡騎士手套", type: "arm", slot: "gloves", ac: 2, req: "knight", safe: 4, p: 18500, gachaWeight: 1 },
         "arm_101": { n: "克特手套", type: "arm", slot: "gloves", ac: 2, req: "knight", safe: 4, p: 17500, gachaWeight: 1 },
         "arm_102": { n: "保護者手套", type: "arm", slot: "gloves", ac: 0, req: "elf", safe: 4, p: 4500, mhp: 20, mmp: 20, gachaWeight: 20 },
-        "arm_103": { n: "小盾牌", type: "arm", slot: "shield", ac: 1, req: "all", safe: 4, p: 84, gachaWeight: 100 },
-        "shd_elf": { n: "精靈盾牌", type: "arm", slot: "shield", ac: 2, req: "all", safe: 6, p: 3200, gachaWeight: 100 },
-        "arm_104": { n: "阿克海盾牌", type: "arm", slot: "shield", ac: 1, req: "all", safe: 4, p: 28, gachaWeight: 100 },
-        "arm_105": { n: "大盾牌", type: "arm", slot: "shield", ac: 2, req: "knight,elf", safe: 4, p: 1680, gachaWeight: 100 },
-        "shd_gnome": { n: "侏儒圓盾", type: "arm", slot: "shield", ac: 2, req: "knight,elf", safe: 4, p: 240, gachaWeight: 100 },
-        "arm_106": { n: "反射之盾", type: "arm", slot: "shield", ac: 2, req: "knight,elf", safe: 4, p: 28000, immStone: true, magicDrNonEle: 50, d: "受到無屬性魔法傷害時減少50%。免疫石化。", gachaWeight: 1 },
-        "arm_107": { n: "伊娃之盾", type: "arm", slot: "shield", ac: 3, req: "all", safe: 4, p: 5200, mhp: 20, eff: "haste", gachaWeight: 1 },
-        "arm_108": { n: "塔盾", type: "arm", slot: "shield", ac: 3, req: "knight", safe: 4, p: 9800, gachaWeight: 50 },
-        "arm_109": { n: "木盾", type: "arm", slot: "shield", ac: 1, req: "all", safe: 4, p: 16, gachaWeight: 100 },
-        "arm_110": { n: "銀騎士之盾", type: "arm", slot: "shield", ac: 2, mr: 4, req: "knight", safe: 4, p: 2600, gachaWeight: 20 },
-        "arm_111": { n: "皮盾牌", type: "arm", slot: "shield", ac: 1, req: "all", safe: 4, p: 32, gachaWeight: 100 },
-        "arm_112": { n: "銀釘皮盾", type: "arm", slot: "shield", ac: 2, req: "all", safe: 4, p: 255, gachaWeight: 100 },
-        "shd_bone": { n: "骷髏盾牌", type: "arm", slot: "shield", ac: 3, req: "all", safe: 0, p: 255, gachaWeight: 100 },
-		"shd_redknight": { n: "紅騎士盾牌", type: "arm", slot: "shield", ac: 2, req: "knight", safe: 6, p: 9800, immStone: true, magicDrNonEle: 20, d: "受到無屬性魔法傷害時減少20%。免疫石化。", gachaWeight: 20 },
-        "arm_113": { n: "鋼鐵盾牌", type: "arm", slot: "shield", ac: 3, req: "knight", safe: 4, p: 16500, gachaWeight: 20 },
-        "arm_114": { n: "受詛咒的魔法書", type: "arm", slot: "shield", ac: 1, req: "mage", p: 1, gachaWeight: 0 },
-        "arm_115": { n: "魔法能量之書", type: "arm", slot: "shield", ac: 2, req: "mage", safe: 4, p: 9800, int: 1, gachaWeight: 20 },
+        "arm_103": { n: "小盾牌", type: "arm", slot: "shield", ac: 1, req: "all", safe: 4, p: 84, gachaWeight: 100, block: 20 },
+        "shd_elf": { n: "精靈盾牌", type: "arm", slot: "shield", ac: 2, req: "all", safe: 6, p: 3200, gachaWeight: 100, block: 40 },
+        "arm_104": { n: "阿克海盾牌", type: "arm", slot: "shield", ac: 1, req: "all", safe: 4, p: 28, gachaWeight: 100, block: 30 },
+        "arm_105": { n: "大盾牌", type: "arm", slot: "shield", ac: 2, req: "knight,elf", safe: 4, p: 1680, gachaWeight: 100, block: 50 },
+        "shd_gnome": { n: "侏儒圓盾", type: "arm", slot: "shield", ac: 2, req: "knight,elf", safe: 4, p: 240, gachaWeight: 100, block: 30 },
+        "arm_106": { n: "反射之盾", type: "arm", slot: "shield", ac: 2, req: "knight,elf", safe: 4, p: 28000, immStone: true, magicDrNonEle: 50, d: "受到無屬性魔法傷害時減少50%。免疫石化。", gachaWeight: 1, block: 40 },
+        "arm_107": { n: "伊娃之盾", type: "arm", slot: "shield", ac: 3, req: "all", safe: 4, p: 5200, mhp: 20, eff: "haste", gachaWeight: 1, block: 40 },
+        "arm_108": { n: "塔盾", type: "arm", slot: "shield", ac: 3, req: "knight", safe: 4, p: 9800, gachaWeight: 50, block: 70 },
+        "arm_109": { n: "木盾", type: "arm", slot: "shield", ac: 1, req: "all", safe: 4, p: 16, gachaWeight: 100, block: 30 },
+        "arm_110": { n: "銀騎士之盾", type: "arm", slot: "shield", ac: 2, mr: 4, req: "knight", safe: 4, p: 2600, gachaWeight: 20, block: 70 },
+        "arm_111": { n: "皮盾牌", type: "arm", slot: "shield", ac: 1, req: "all", safe: 4, p: 32, gachaWeight: 100, block: 20 },
+        "arm_112": { n: "銀釘皮盾", type: "arm", slot: "shield", ac: 2, req: "all", safe: 4, p: 255, gachaWeight: 100, block: 30 },
+        "shd_bone": { n: "骷髏盾牌", type: "arm", slot: "shield", ac: 3, req: "all", safe: 0, p: 255, gachaWeight: 100, block: 30 },
+		"shd_redknight": { n: "紅騎士盾牌", type: "arm", slot: "shield", ac: 2, req: "knight", safe: 6, p: 9800, immStone: true, magicDrNonEle: 20, d: "受到無屬性魔法傷害時減少20%。免疫石化。", gachaWeight: 20, block: 50 },
+        "arm_113": { n: "鋼鐵盾牌", type: "arm", slot: "shield", ac: 3, req: "knight", safe: 4, p: 16500, gachaWeight: 20, block: 60 },
+        "arm_114": { n: "受詛咒的魔法書", type: "arm", slot: "shield", ac: 1, req: "mage", p: 1, gachaWeight: 0, block: 10 },
+        "arm_115": { n: "魔法能量之書", type: "arm", slot: "shield", ac: 2, req: "mage", safe: 4, p: 9800, int: 1, gachaWeight: 20, block: 10 },
         "acc_116": { n: "傳送控制戒指", type: "acc", slot: "ring", ac: 0, req: "all", safe: 0, p: 50000, gachaWeight: 1 },
         "acc_117": { n: "變形控制戒指", type: "acc", slot: "ring", ac: 0, req: "all", safe: 0, p: 50000, gachaWeight: 1 },
         "rng_mr": { n: "抗魔戒指", type: "acc", slot: "ring", ac: 0, mr: 5, req: "all", safe: 0, p: 10000, gachaWeight: 1 },
@@ -1503,7 +1503,7 @@ const DB = {
         '哈柏哥布林': [['hlm_mr', 0.5], ['wpn_9',3], ['arm_42',3], ['potion_haste',1], ['new_item_180',100]],
         '哈維': [['arm_62',0.5], ['new_item_150',1], ['bk_haste_spell',0.5], ['bk_holy_dash',0.05], ['potion_blue',1], ['bk_greater_haste',0.01], ['new_item_195',1], ['bk_elf_stormeye',0.001]],
         '哥布林': [['hlm_mr', 0.05], ['wpn_9',1], ['wpn_10',1], ['arm_42',5], ['bot_short',3], ['potion_heal',3]],
-        '地獄犬': [['wpn_witchwand',0.5], ['scroll_acc',0.01], ['new_item_150',1], ['new_item_157',5], ['new_item_158',0.5], ['new_item_159',0.1], ['bk_fireball',0.5], ['bk_break',0.5], ['bk_holy_barrier',0.001], ['new_item_195',1]],
+        '地獄犬': [['wpn_strwand',0.1], ['wpn_witchwand',0.5], ['scroll_acc',0.01], ['new_item_150',1], ['new_item_157',5], ['new_item_158',0.5], ['new_item_159',0.1], ['bk_fireball',0.5], ['bk_break',0.5], ['bk_holy_barrier',0.001], ['new_item_195',1]],
         '地精靈王': [['arm_69', 1], ['arm_63',5], ['potion_haste',1], ['scroll_weapon',5], ['scroll_armor',10], ['scroll_revive',1], ['potion_blue',1], ['panacea_con',1]],
         '地靈': [['wpn_10',3], ['bot_short',1], ['new_item_179',50]],
         '夏洛伯': [['bk_slow',0.1], ['bk_earthquake',0.01], ['scroll_acc',0.001], ['new_item_144',1]],
@@ -1674,7 +1674,7 @@ let player = {
     inv: [], eq: { wpn: null, arrow: null, helm: null, armor: null, shield: null, cloak: null, tshirt: null, gloves: null, boots: null, ring1: null, ring2: null, amulet: null, belt: null },
     skills: [], buffs: { haste: 0, brave: 0, blue: 0, cautious: 0, elfcookie: 0, poly: 0, shield: 0, sk_magic_shield: 0 }, poly: null,
     summon: null, manualCd: {}, elfEle: null, hot: null,
-    cds: { pot: 0, atkSk: 0, healSk: 0 }, dead: false, statuses: { stun: 0, freeze: 0, stone: 0, poison: 0, poisonDmg: 0, poisonTick: 0, burn: 0, burnDmg: 0, burnTick: 0, scald: 0, scaldDmg: 0, scaldTick: 0, silence: 0, paralyze: 0, magicseal: 0, armorBreak: 0, slowAtk: 0 },
+    cds: { pot: 0, atkSk: 0, healSk: 0 }, dead: false, statuses: { stun: 0, freeze: 0, stone: 0, poison: 0, poisonDmg: 0, poisonTick: 0, burn: 0, burnDmg: 0, burnTick: 0, scald: 0, scaldDmg: 0, scaldTick: 0, silence: 0, paralyze: 0, magicseal: 0, armorBreak: 0, slowAtk: 0, cleave: 0 },
     d: { str:0, dex:0, con:0, int:0, wis:0, cha:8,
          meleeDmg: 0, meleeHit: 0, meleeCrit: 0,           // 近距離（力量）
          rangedDmg: 0, rangedHit: 0, rangedCrit: 0,         // 遠距離（敏捷）
@@ -2045,6 +2045,9 @@ function calcStats() {
         d.aspd = w.spd;
         if(w.mdmg) d.magicDmg += w.mdmg;
         if(w.mpR) d.mpR += w.mpR;
+        if(w.mpROverSafe && p.eq.wpn.en > (w.safe || 0)) d.mpR += (p.eq.wpn.en - (w.safe || 0)) * w.mpROverSafe;   // 突破安定值：每超過1階，MP自然恢復量 +mpROverSafe
+        if(w.extraMpPerEn)  d.extraMp  += p.eq.wpn.en * w.extraMpPerEn;    // 每強化+1 → 額外魔法點數
+        if(w.meleeHitPerEn) d.meleeHit += p.eq.wpn.en * w.meleeHitPerEn;   // 每強化+1 → 近距離命中
         // 武器祝福/遠古：依規格計入（同時影響遠近距離）
         // 祝福的武器：額外傷害+1、額外魔法點數+2、額外命中+1
         if (p.eq.wpn.bless) { d.extraDmg += 1; d.extraHit += 1; d.extraMp += 2; }
@@ -2143,6 +2146,7 @@ d.mr += (baseMr + bonusMr);
     if(p.buffs.haste > 0) spdMult *= 0.67;   // 自我加速 / 加速 +33%
     if(p.buffs.brave > 0) spdMult *= 0.67;   // 勇敢藥水 +33%
     if(p.buffs.elfcookie > 0) spdMult *= 0.85; // 精靈餅乾 +15%
+    if(p.statuses && p.statuses.cleave > 0) spdMult *= 0.80;   // 切割（雙手劍重擊觸發）：攻速+20%，與其他加速相乘疊加
     if(p.buffs.blue > 0) d.mpR += getWisBlueBonus(d.wis);          // 藍色藥水：依精神提升MP恢復
     if(p.buffs.cautious > 0) { d.magicDmg += 2; d.mpR += 2; }      // 慎重藥水
     if(p.buffs.sk_reduction_armor > 0) d.dr += Math.floor(p.lv/10);   // 增幅防禦：等同傷害減免 floor(等級/10)，併入 DR 顯示與計算
@@ -2565,6 +2569,7 @@ function tick() {
     }
     
     if(player.statuses && player.statuses.slowAtk > 0) player.statuses.slowAtk--;   // 寒冰吐息：攻速減慢倒數
+    if(player.statuses && player.statuses.cleave > 0) { player.statuses.cleave--; if(player.statuses.cleave === 0) calcStats(); }   // 切割：攻速+20%倒數，到期重算
     if(canAct) {
         state.pDmgTick++;
         let aspdTicks = Math.max(1, Math.floor(player.d.aspd * 10));
@@ -2910,6 +2915,10 @@ function spawnMob(idx) {
     let base = DB.mobs[mobId];
     if(!base) return;
     mapState.mobs[idx] = { ...base, curHp: base.hp, uid: uid(), _magCd: {}, justHit: false, st: newMobStatus() };
+    // 弓：場上原本沒有任何敵人時，第一個出現的敵人不論主動/被動，都強制視為被動（搭配弓攻擊3秒延遲，可先手放風箏）
+    if(!base.boss && player.eq.wpn && DB.items[player.eq.wpn.id] && DB.items[player.eq.wpn.id].isBow && !mapState.mobs.some((m, j) => m && j !== idx)) {
+        mapState.mobs[idx].beh = '被動';   // 頭目除外，維持主動
+    }
     if(base.pledgeEnemy) applyPledgeEnemyScaling(mapState.mobs[idx]);   // 血盟敵人：依玩家等級縮放
     if(base.siegeEnemy) applySiegeEnemyScaling(mapState.mobs[idx]);   // 攻城敵人：依玩家等級縮放
     if(base.n === '肯特城門' && player.siege && player.siege.gateHp > 0) mapState.mobs[idx].curHp = Math.min(mapState.mobs[idx].hp, player.siege.gateHp);   // 城門HP保留
@@ -2987,7 +2996,12 @@ function getPhysicalDmg(diceStr, target, wpn, arrowData) {
     let hit = false, heavy = false, graze = false;
     if (rollHit === 20) { hit = true; heavy = true; }
     else if (rollHit !== 1 && hitValue >= rollHit) hit = true;
-    else if (rollHit === 19) { hit = true; graze = true; }   // 擲到19依公式本應未命中時 → 擦傷：仍命中，但最終傷害剩50%
+    else if (rollHit === 19) {   // 擲到19依公式本應未命中時 → 擦傷
+        hit = true;
+        let _cw = player.eq.wpn && DB.items[player.eq.wpn.id];
+        if (_cw && _cw.eff === 'crush') heavy = true;   // 重擊武器：本應擦傷時改為觸發重擊（不擦傷）
+        else graze = true;                              // 一般武器：擦傷（傷害剩50%）
+    }
     if(!hit) return { dmg: 0, hit: false, heavy: false, crit: false, graze: false, ranged: isRanged };
 
     // 爆擊判定（依遠/近距離爆擊率）
@@ -3168,6 +3182,13 @@ function playerAttack() {
         else if(result.heavy) { tag = 'player-heavy'; ext = ' (重擊!)'; }
         else if(result.graze) { tag = 'player-graze'; ext = ' (擦傷!)'; }
 
+        // 切割：雙手劍重擊時觸發，自身攻速+20%持續2秒（與其他加速相乘疊加）
+        if(result.heavy && wpn && wpn.eff === 'cleave') {
+            let _wasCleave = player.statuses.cleave > 0;
+            player.statuses.cleave = 20;   // 2秒 = 20 ticks
+            if(!_wasCleave) calcStats();
+        }
+
         // 簡化戰鬥資訊，不顯示遠/近距離[cite: 8]
         logCombat(`${killPrefix}命中 <span class="${getMobColor(target.lv)}">${target.n}</span>，造成 ${result.dmg} 點傷害。${ext}`, tag);
         
@@ -3266,11 +3287,19 @@ function enemyPhysicalAttack(mob, idx, stunChance = 0) {
             }
         }
 
+        // 盾牌格檔：敵人重擊時依盾牌機率發動，受到傷害減少50%
+        let blocked = false;
+        if(heavy && player.eq.shield) {
+            let _sh = DB.items[player.eq.shield.id];
+            if(_sh && _sh.block && Math.random() * 100 < _sh.block) { totalDmg = Math.floor(totalDmg * 0.5); blocked = true; }
+        }
+
         totalDmg = Math.max(1, totalDmg);
         player.hp -= totalDmg;
 
         let atkMsg = `${mobInsightPrefix}<span class="${getMobColor(mob.lv)}">${mob.n}</span> 擊中你，造成 ${totalDmg} 點傷害。`;
         if(heavy) atkMsg += " (重擊!)";
+        if(blocked) atkMsg += ' <span class="text-cyan-300 font-bold">(格檔!)</span>';
         logCombat(atkMsg, 'enemy');
         
         if (player.hp <= 0) killPlayer();
@@ -5511,6 +5540,9 @@ function buildItemDescHTML(item) {
         if (d.eff === 'moonburst')  _eff.push('月光爆裂');
         if (d.eff === 'dice_death') _eff.push('即死');
         if (d.eff === 'haste')      _eff.push('自我加速');
+        if (d.eff === 'crush')      _eff.push('重擊');
+        if (d.eff === 'cleave')     _eff.push('切割');
+        if (d.block)                _eff.push('格檔：' + d.block + '%');
         if (d.immStone)             _eff.push('免疫石化');
         if (_eff.length) desc += `<br><span class="text-rose-300 font-bold">特效：${_eff.join(' / ')}</span>`;
     }
@@ -8692,7 +8724,7 @@ window.onload = () => {
     let tipEl = null, ICON2ID = null;
     const TYPE_LABEL = { wpn:'武器', arm:'防具', acc:'飾品', scroll:'卷軸', pot:'藥水', skillbk:'魔法書', etc:'道具', material:'素材' };
     const STAT_LABEL = { ac:'AC', mr:'魔防(MR)', dr:'傷害減免', er:'迴避(ER)', str:'力量', dex:'敏捷', con:'體質', int:'智力', wis:'精神', cha:'魅力', mhp:'HP上限', mmp:'MP上限', hpR:'HP恢復', mpR:'MP恢復' };
-    const EFF_LABEL = { moonburst:'月光爆裂', pierce:'穿透', dice_death:'即死', haste:'自我加速', immStone:'免疫石化', mp_drain:'命中恢復MP' };
+    const EFF_LABEL = { moonburst:'月光爆裂', pierce:'穿透', dice_death:'即死', haste:'自我加速', immStone:'免疫石化', mp_drain:'命中恢復MP', crush:'重擊', cleave:'切割' };
     function sgn(v){ return (v>=0?'+':'') + v; }
     function buildMap(){ ICON2ID = {}; for(let id in DB.items){ let d = DB.items[id]; if(d) ICON2ID[getIconUrl(d)] = id; } }
     function getTip(){ if(!tipEl){ tipEl = document.createElement('div'); tipEl.className = 'game-tooltip'; document.body.appendChild(tipEl); } return tipEl; }
@@ -8729,6 +8761,9 @@ window.onload = () => {
             if(d.eff === 'moonburst')  _eff.push('月光爆裂');
             if(d.eff === 'dice_death') _eff.push('即死');
             if(d.eff === 'haste')      _eff.push('自我加速');
+            if(d.eff === 'crush')      _eff.push('重擊');
+            if(d.eff === 'cleave')     _eff.push('切割');
+            if(d.block)                _eff.push('格檔：' + d.block + '%');
             if(d.eff === 'mp_drain')   _eff.push('命中恢復MP');
             if(d.immStone)             _eff.push('免疫石化');
             if(_eff.length) parts.push(`<div class="text-rose-300 font-bold" style="font-size:12px;">特效：${_eff.join(' / ')}</div>`);
