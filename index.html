@@ -1145,7 +1145,8 @@ const DB = {
                 { id: "npc_ismael", n: "伊賽馬利", title: "交換物品", type: "exchange", d: "以卷軸或金幣交換稀有的祝福卷軸與飾品卷軸。" },
                 { id: "npc_pandora", n: "潘朵拉", title: "黑市", type: "exchange", d: "可能隨機抽到任何物品。" },
                 { id: "npc_esti", n: "依詩蒂", title: "血盟", type: "pledge", d: "尋找以血為盟的夥伴。" },
-                { id: "npc_tros", n: "特羅斯", title: "血盟", type: "pledge", d: "尋找以血為盟的夥伴。" }
+                { id: "npc_tros", n: "特羅斯", title: "血盟", type: "pledge", d: "尋找以血為盟的夥伴。" },
+                { id: "npc_obel", n: "奧貝勒", title: "魔物追蹤", type: "exchange", d: "消耗王族搜索狀，追蹤指定地區的特定魔物。" }
             ]
         },
         "town_talking": {
@@ -1669,7 +1670,7 @@ function flushAwaySummary() {
 
 let player = {
     cls: null, name: null, lv: 1, exp: 0, gold: 1000, hp: 0, mhp: 0, mp: 0, mmp: 0, blessings: {},
-    base: { str:0, dex:0, con:0, int:0, wis:0, cha:8 }, bonus: 0, alloc: { str:0, dex:0, con:0, int:0, wis:0, cha:0 }, panacea: { str:0, dex:0, con:0, int:0, wis:0, cha:0 }, panaceaUsed: 0, junkPrefs: {}, bloodPledge: null, magicShieldCd: 0, lastMapByCat: {}, siege: { active:false, gateKilled:false, towerKilled:false, endTime:0, kills:0, result:null, cooldownUntil:0, rewardPending:false, victoryUntil:0, accCdUntil:0 },
+    base: { str:0, dex:0, con:0, int:0, wis:0, cha:8 }, bonus: 0, alloc: { str:0, dex:0, con:0, int:0, wis:0, cha:0 }, panacea: { str:0, dex:0, con:0, int:0, wis:0, cha:0 }, panaceaUsed: 0, junkPrefs: {}, bloodPledge: null, magicShieldCd: 0, lastMapByCat: {}, tracking: null, siege: { active:false, gateKilled:false, towerKilled:false, endTime:0, kills:0, result:null, cooldownUntil:0, rewardPending:false, victoryUntil:0, accCdUntil:0 },
     inv: [], eq: { wpn: null, arrow: null, helm: null, armor: null, shield: null, cloak: null, tshirt: null, gloves: null, boots: null, ring1: null, ring2: null, amulet: null, belt: null },
     skills: [], buffs: { haste: 0, brave: 0, blue: 0, cautious: 0, elfcookie: 0, poly: 0, shield: 0, sk_magic_shield: 0 }, poly: null,
     summon: null, manualCd: {}, elfEle: null, hot: null,
@@ -2900,6 +2901,12 @@ function spawnMob(idx) {
         }
     }
     
+    // 魔物追蹤：在追蹤地圖且追蹤有效期間，每次出怪 50% 固定機率改為被追蹤的怪物
+    if(player.tracking && player.tracking.until > Date.now() && player.tracking.map === mapState.current
+       && DB.maps[mapState.current] && DB.maps[mapState.current].includes(player.tracking.mob)
+       && DB.mobs[player.tracking.mob] && !DB.mobs[player.tracking.mob].boss && Math.random() < 0.5) {
+        mobId = player.tracking.mob;
+    }
     let base = DB.mobs[mobId];
     if(!base) return;
     mapState.mobs[idx] = { ...base, curHp: base.hp, uid: uid(), _magCd: {}, justHit: false, st: newMobStatus() };
@@ -6133,6 +6140,108 @@ function handleSiegeKill(mob) {
 function siegeVictoryActive() { return !!(player.siege && Date.now() < (player.siege.victoryUntil || 0)); }
 function shopPrice(base) { return siegeVictoryActive() ? Math.floor((base || 0) * 0.8) : (base || 0); }   // 攻城獲勝 24h：商店 8 折
 function ismaelAccCdLeft() { return Math.max(0, ((player.siege && player.siege.accCdUntil) || 0) - Date.now()); }
+function ismaelExchangeTicket() {
+    let w = pledgeCountItem('new_item_241');
+    if(w < 20) { alert(`王族搜索狀不足 20 張（目前 ${w} 張）。`); return; }
+    let left = 20;
+    for(let it of player.inv) { if(it.id === 'new_item_241' && left > 0) { let take = Math.min(it.cnt, left); it.cnt -= take; left -= take; } }
+    player.inv = player.inv.filter(it => it.cnt > 0);
+    gainItem('new_item_239', 1, true, true);
+    renderTabs();
+    logSys('以 20 張王族搜索狀兌換了 1 張 <span class="text-amber-300 font-bold">潘朵拉抽獎卷</span>。');
+    updateUI();
+    let el = document.getElementById('interaction-content'); if(el) renderIsmaelExchange(el);
+}
+let _obelSel = { map: '', mob: '' };
+let _activePanel = null;   // 'obel' | 'pledge:esti' | 'pledge:tros' | null：目前開啟、需每分鐘刷新剩餘時間的面板
+function startPanelRefresh() {
+    if(window._panelRefreshTimer) return;
+    window._panelRefreshTimer = setInterval(() => {
+        let cont = document.getElementById('town-interaction-container');
+        let el = document.getElementById('interaction-content');
+        if(!cont || cont.classList.contains('hidden') || !el || !_activePanel) return;
+        if(_activePanel === 'obel') {
+            if(player.tracking && player.tracking.until > Date.now()) renderObelNPC(el);   // 追蹤中(有倒數)才刷新，避免打斷選取
+        } else if(_activePanel.indexOf('pledge:') === 0) {
+            renderPledgeNPC(el, _activePanel.split(':')[1]);
+        }
+    }, 60000);
+}
+function obelMapList() {
+    let out = [];
+    ['wild', 'dungeon', 'special'].forEach(cat => {
+        (MAP_CATEGORIES[cat] || []).forEach(e => {
+            if(DB.maps[e.v] && !PURE_BOSS_MAPS.includes(e.v)) out.push({ v: e.v, t: e.t });
+        });
+    });
+    return out;
+}
+function renderObelNPC(div) {
+    _activePanel = 'obel'; startPanelRefresh();
+    let warrants = pledgeCountItem('new_item_241');
+    let tr = player.tracking;
+    if(tr && tr.until > Date.now()) {
+        let leftMs = tr.until - Date.now();
+        let h = Math.floor(leftMs / 3600000), m = Math.floor((leftMs % 3600000) / 60000);
+        let mapName = (obelMapList().find(x => x.v === tr.map) || {}).t || tr.map;
+        let mobName = (DB.mobs[tr.mob] || {}).n || tr.mob;
+        div.innerHTML = `
+        <div class="flex flex-col gap-3 p-1">
+            <div class="text-slate-300 text-sm leading-relaxed">奧貝勒：我正在為你追蹤獵物。</div>
+            <div class="bg-slate-800/60 border border-slate-600 rounded p-3 text-sm text-slate-200 leading-relaxed">
+                追蹤目標：<span class="text-amber-300 font-bold">${mobName}</span><br>
+                追蹤地區：<span class="text-sky-300">${mapName}</span><br>
+                剩餘時間：<span class="text-green-400 font-bold">${h} 時 ${m} 分</span><br>
+                <span class="text-xs text-slate-400">前往該地區時，每次出怪有 50% 機率為追蹤目標。</span>
+            </div>
+            <button class="btn bg-blue-700 hover:bg-blue-600 border-blue-500 py-2 px-4 font-bold" onclick="obelCancelTracking()">取消追蹤（剩 ${h} 時 ${m} 分）</button>
+        </div>`;
+        return;
+    }
+    let maps = obelMapList();
+    let mapOpts = '<option value="">— 選擇地區 —</option>' + maps.map(x => `<option value="${x.v}" ${_obelSel.map === x.v ? 'selected' : ''}>${x.t}</option>`).join('');
+    let mobHtml = '';
+    if(_obelSel.map && DB.maps[_obelSel.map]) {
+        mobHtml = DB.maps[_obelSel.map].map(id => {
+            let mb = DB.mobs[id]; if(!mb) return '';
+            if(mb.boss) {
+                return `<label class="flex items-center gap-2 py-1 px-2 rounded opacity-50 cursor-not-allowed"><input type="checkbox" disabled> <span class="${getMobColor(mb.lv)}">${mb.n}</span> <span class="text-xs text-slate-500">Lv${mb.lv}</span> <span class="text-xs text-red-400">（頭目無法追蹤）</span></label>`;
+            }
+            let checked = _obelSel.mob === id;
+            return `<label class="flex items-center gap-2 cursor-pointer py-1 px-2 rounded ${checked ? 'bg-sky-900/50' : ''}"><input type="checkbox" ${checked ? 'checked' : ''} onclick="onObelMobToggle('${id}')"> <span class="${getMobColor(mb.lv)}">${mb.n}</span> <span class="text-xs text-slate-500">Lv${mb.lv}</span></label>`;
+        }).join('');
+    }
+    let canStart = _obelSel.mob && warrants >= 50;
+    div.innerHTML = `
+        <div class="flex flex-col gap-3 p-1">
+            <div class="text-slate-300 text-sm leading-relaxed">奧貝勒：你想搜索哪一頭魔物？給我 50 張王族搜索狀就能幫你追蹤。<br><span class="text-xs text-slate-400">持有王族搜索狀：<span class="text-green-400 font-bold">${warrants}</span> 張</span></div>
+            <select class="w-full bg-slate-900 border border-slate-600 text-white px-2 py-2 rounded text-sm" onchange="onObelMapChange(this.value)">${mapOpts}</select>
+            ${_obelSel.map ? `<div class="bg-slate-800/40 border border-slate-700 rounded p-2 max-h-60 overflow-y-auto flex flex-col gap-0.5">${mobHtml || '<span class="text-slate-500 text-sm">此地區無可追蹤的怪物</span>'}</div>` : ''}
+            <button class="btn ${canStart ? 'bg-red-700 hover:bg-red-600 border-red-500' : 'bg-slate-600 border-slate-500 opacity-60 cursor-not-allowed'} py-2 px-4 font-bold" ${canStart ? '' : 'disabled'} onclick="obelStartTracking()">開始追蹤（消耗 50 張王族搜索狀）</button>
+        </div>`;
+}
+function onObelMapChange(v) { _obelSel.map = v; _obelSel.mob = ''; let el = document.getElementById('interaction-content'); if(el) renderObelNPC(el); }
+function onObelMobToggle(id) { if(DB.mobs[id] && DB.mobs[id].boss) return; _obelSel.mob = (_obelSel.mob === id) ? '' : id; let el = document.getElementById('interaction-content'); if(el) renderObelNPC(el); }
+function obelStartTracking() {
+    if(!_obelSel.mob || !_obelSel.map) return;
+    if(pledgeCountItem('new_item_241') < 50) { alert('王族搜索狀不足 50 張。'); return; }
+    let left = 50;
+    for(let it of player.inv) { if(it.id === 'new_item_241' && left > 0) { let take = Math.min(it.cnt, left); it.cnt -= take; left -= take; } }
+    player.inv = player.inv.filter(it => it.cnt > 0);
+    player.tracking = { map: _obelSel.map, mob: _obelSel.mob, until: Date.now() + 8 * 3600 * 1000 };
+    _obelSel = { map: '', mob: '' };
+    renderTabs(); saveGame();
+    logSys(`奧貝勒開始追蹤 <span class="text-amber-300 font-bold">${(DB.mobs[player.tracking.mob] || {}).n}</span>，持續 8 小時。`);
+    let el = document.getElementById('interaction-content'); if(el) renderObelNPC(el);
+    updateUI();
+}
+function obelCancelTracking() {
+    if(!confirm('確定要取消追蹤嗎？（已消耗的王族搜索狀不會退還）')) return;
+    player.tracking = null;
+    saveGame();
+    logSys('已取消追蹤。');
+    let el = document.getElementById('interaction-content'); if(el) renderObelNPC(el);
+}
 function renderIsmaelExchange(el) {
     let sw = pledgeCountItem('scroll_weapon'), sa = pledgeCountItem('scroll_armor');
     let cd = ismaelAccCdLeft();
@@ -6140,6 +6249,10 @@ function renderIsmaelExchange(el) {
     el.innerHTML = `
         <div class="flex flex-col gap-3 p-1">
             <div class="text-slate-300 text-sm leading-relaxed">伊賽馬利：需要稀有的卷軸嗎？我這裡能交換。</div>
+            <div class="flex items-center justify-between gap-2 bg-slate-800/60 border border-slate-600 rounded p-3">
+                <div class="text-sm text-slate-200 leading-relaxed">20 張 <span class="text-sky-300">王族搜索狀</span> → 1 張 <span class="text-amber-300 font-bold">潘朵拉抽獎卷</span><br><span class="text-xs text-slate-400">持有：${pledgeCountItem('new_item_241')} 張（無次數限制）</span></div>
+                <button class="btn bg-blue-700 hover:bg-blue-600 border-blue-500 py-2 px-4 font-bold shrink-0" onclick="ismaelExchangeTicket()">兌換</button>
+            </div>
             <div class="flex items-center justify-between gap-2 bg-slate-800/60 border border-slate-600 rounded p-3">
                 <div class="text-sm text-slate-200 leading-relaxed">50 張 <span class="text-sky-300">對武器施法的卷軸</span> → 1 張 <span class="text-amber-300 font-bold">祝福的 對武器施法的卷軸</span><br><span class="text-xs text-slate-400">持有：${sw} 張（無次數限制）</span></div>
                 <button class="btn bg-blue-700 hover:bg-blue-600 border-blue-500 py-2 px-4 font-bold shrink-0" onclick="ismaelExchange('weapon')">兌換</button>
@@ -6293,6 +6406,7 @@ function renderTownNPCs(townId) {
 function interactNPC(npcId, townId) {
     let npc = DB.towns[townId].npcs.find(n => n.id === npcId);
     if(!npc) return;
+    _activePanel = null;   // 開啟新面板：先清除自動刷新標記，由對應 render 視需要重新設定
 
     document.getElementById('town-npc-container').classList.add('hidden');
     document.getElementById('town-interaction-container').classList.remove('hidden');
@@ -6307,6 +6421,8 @@ function interactNPC(npcId, townId) {
     // 根據 NPC 的類型，載入不同的 UI
     if (npc.type === 'shop' || npc.id === 'npc_gilen') {
         renderTownShop(contentDiv, npc.id);  
+    } else if (npc.id === 'npc_obel') { 
+        renderObelNPC(contentDiv);
     } else if (npc.id === 'npc_pandora') { 
         renderPandoraGacha(contentDiv);
     } else if (npc.id === 'npc_elion') {
@@ -6383,6 +6499,7 @@ function blessingRemainText(key) {
 }
 
 function renderPledgeNPC(div, faction) {
+    _activePanel = 'pledge:' + faction; startPanelRefresh();
     let cfg = PLEDGE_CFG[faction];
 
     // 已加入本陣營：盟主祝福介面
@@ -7437,6 +7554,7 @@ function loadGame() {
         if(!player.siege) player.siege = { active:false, gateKilled:false, towerKilled:false, endTime:0, kills:0, result:null, cooldownUntil:0, rewardPending:false, victoryUntil:0, accCdUntil:0 };
         if(player.panaceaUsed === undefined) player.panaceaUsed = 0;
         if(!player.lastMapByCat) player.lastMapByCat = {};
+        if(player.tracking === undefined) player.tracking = null;
         // 相容舊存檔：單一 partner → partners 陣列
         if(player.partners === undefined) player.partners = (player.partner ? [player.partner] : []);
         // 相容舊存檔：返生術改為被動技能，清除先前施放殘留的無作用 buff；初始化復活卷軸冷卻
