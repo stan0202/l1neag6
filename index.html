@@ -18,8 +18,8 @@
     user-select: none; 
 }
         body.game-bg-dim { background-image: linear-gradient(rgba(55,65,81,0.8), rgba(55,65,81,0.8)), url('assets/background/background.png'); }  /* 正式開始遊戲後：背景淡化 */
-        .log-bg { border: 3px solid transparent; background: linear-gradient(180deg, #23282e 0%, #3e4651 50%, #1d2025 100%) padding-box, linear-gradient(135deg, #4a3613 0%, #b89243 20%, #6e5220 42%, #e6c474 60%, #5c4318 80%, #c9a14a 100%) border-box; }  /* 日誌訊息區：較深灰底 + 黃褐不規則漸層邊框 */
-        .panel { background: #1e293b padding-box, linear-gradient(135deg, #4a3613 0%, #b89243 20%, #6e5220 42%, #e6c474 60%, #5c4318 80%, #c9a14a 100%) border-box; border: 2px solid transparent; border-radius: 0.75rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; }
+        .log-bg { border: 3px solid transparent; border-bottom-width: 1px; background: linear-gradient(180deg, #23282e 0%, #3e4651 50%, #1d2025 100%) padding-box, linear-gradient(135deg, #4a3613 0%, #b89243 20%, #6e5220 42%, #e6c474 60%, #5c4318 80%, #c9a14a 100%) border-box; }  /* 日誌訊息區：較深灰底 + 黃褐不規則漸層邊框 */
+        .panel { background: #1e293b padding-box, linear-gradient(135deg, #4a3613 0%, #b89243 20%, #6e5220 42%, #e6c474 60%, #5c4318 80%, #c9a14a 100%) border-box; border: 2px solid transparent; border-bottom-width: 1px; border-radius: 0.75rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; }
         .panel-header { background: linear-gradient(135deg, #7e6630 0%, #a07f3c 18%, #6e5828 40%, #927535 58%, #5f4d22 78%, #876d31 100%); border-bottom: 1px solid #334155; padding: 0.75rem 1.25rem; font-size: 1.125rem; font-weight: bold; color: #e2e8f0; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem; }
         #status-panel > .panel-header { background: transparent; color: #fbbf24; text-shadow: none; }  /* 人物左上資訊框標題：還原原本顏色 */
         .tab-bar .btn { background: linear-gradient(135deg, #594720 0%, #786030 26%, #4a3c1a 48%, #6b5628 72%, #413518 100%); border-color: #6e5824; color: #f1f5f9; text-shadow: 0.5px 0.5px 0 #000, -0.5px -0.5px 0 #000, 0.5px -0.5px 0 #000, -0.5px 0.5px 0 #000; }  /* 分頁鈕：最暗金褐不規則漸層 */
@@ -39,7 +39,7 @@
         .list-item { padding: 0.75rem; border-bottom: 1px solid #334155; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 1rem; width: 100%;}
         .list-item:hover { background: #334155; }
         .set-active { background: #064e3b !important; border: 1px solid #047857 !important; }
-        .mob-target { padding: 0.75rem; border: 2px solid #334155; border-radius: 0.5rem; background: #0f172a; cursor: pointer; flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: center; transition: all 0.2s; min-height: 185px;}
+        .mob-target { padding: 0.75rem; border: 2px solid #334155; border-radius: 0.5rem; background: #0f172a; cursor: pointer; flex: 1; text-align: center; display: flex; flex-direction: column; justify-content: center; transition: all 0.2s; height: 224px; overflow: hidden;}
         .mob-target.active { border-color: #ef4444; background: #450a0a; }
         .mob-target:hover:not(.active) { background: #1e293b; }
         /* 區域背景：背景圖由 JS 依地圖/分類設為 inline 樣式（特殊地圖逐張不同）；卡片較不透明，使背景不過於顯眼 */
@@ -5879,13 +5879,14 @@ function renderMobs() {
             let hitClass = m.justHit ? (m.justHit === true ? 'anim-hit-normal' : `anim-hit-${m.justHit}`) : '';
             m.justHit = false;
 
-            let badges = '';
+            let _badgeTags = '';
             if(m.st) {
                 let order = ['freeze','stun','stone','sleep','poison','blind','weaken','disease','vacuum','broken','slow','mrhalf','magicseal'];
-                let tags = order.filter(k => m.st[k] > 0).map(k =>
+                _badgeTags = order.filter(k => m.st[k] > 0).map(k =>
                     `<span class="px-1 rounded bg-purple-900/70 text-purple-200 text-[10px]">${STATUS_NAME[k]}</span>`).join(' ');
-                if(tags) badges = `<div class="flex flex-wrap justify-center gap-0.5 mb-1">${tags}</div>`;
             }
+            // 徽章列固定常駐（單行、固定高度），避免有/無狀態時背景框忽大忽小
+            let badges = `<div class="flex justify-center gap-0.5 mb-1 overflow-hidden" style="height:18px;">${_badgeTags}</div>`;
 
             html += `<div class="mob-target ${act}" onclick="setTarget(${i})">
                         <div class="flex justify-center text-lg mb-2">
