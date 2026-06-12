@@ -758,7 +758,7 @@ const DB = {
         "scroll_magicbarrier": { n: "魔法卷軸(魔法屏障)", type: "scroll", req: "all", p: 1500, c: "text-cyan-300", d: "使用後獲得「魔法屏障」狀態，持續16秒；成功抵擋一次技能傷害後3秒內無法再次施放（自然到期或取消則無冷卻）", eff: "magicbarrier", gachaWeight: 0 },
         "scroll_teleport": { n: "瞬間移動卷軸", type: "scroll", req: "all", p: 82, c: "text-sky-300", d: "使用後發動傳送術", eff: "teleport_scroll", gachaWeight: 0 },
         "scroll_revive": { n: "復活卷軸", type: "scroll", req: "all", p: 1000, c: "text-yellow-300", d: "持有死亡後可選擇原地復活，冷卻15秒", gachaWeight: 0 },
-        "item_blueflute": { n: "藍色長笛", p: 1, c: "text-white", d: "試煉所需的材料。", gachaWeight: 0 },   // 🔧 名字改白色（避免與藍色系材料混淆）
+        "item_blueflute": { n: "藍色長笛", p: 1, c: "text-blue-300", d: "試煉所需的材料。", gachaWeight: 0 },   // 🔧 試煉材料統一藍色
         "item_ancientkey": { n: "古代鑰匙", p: 1, c: "text-blue-300", d: "試煉所需的材料。", gachaWeight: 0 },   // 🔧 試煉材料統一藍色
         "item_nightvision": { n: "夜之視野", p: 1, c: "text-blue-300", d: "試煉所需的材料。", gachaWeight: 0 },
         "candle": { n: "回憶蠟燭", type: "misc", req: "all", p: 100000, c: "text-red-500", d: "退還所有能力點數，重新分配", eff: "reset", gachaWeight: 0 },
@@ -9859,17 +9859,24 @@ function renderJoelCraft(div, npcId) {
     div.innerHTML = html;
 }
 // 3. 執行製作扣除材料與發放物品
-// ===== 🔧 製作材料配色：所有「非裝備」的製作需求材料，名字統一薄荷綠 =====
-// 掃描全部配方的需求清單，物品類型不是 武器/防具/飾品 者套用 text-emerald-300；
-// 席琳結晶除外（保留專屬呼吸綠光 c-sherine）。
+// ===== 🔧 製作材料配色：所有「非裝備」的製作需求材料，名字統一丁香紫 =====
+// 掃描全部配方的需求清單，物品類型不是 武器/防具/飾品 者套用 text-purple-300。
+// 排除：金幣、席琳結晶（保留呼吸綠光 c-sherine）、試煉材料（同為合成材料時以試煉藍色優先）。
+const QUEST_MATERIAL_IDS = [   // 試煉兌換材料＋卡瑞觸發道具（名字固定藍色，不被製作配色覆蓋）
+    'new_item_196', 'new_item_198', 'new_item_199', 'new_item_200', 'new_item_201', 'new_item_202',
+    'new_item_203', 'new_item_204', 'new_item_205', 'new_item_206', 'new_item_208',
+    'new_item_212', 'new_item_213', 'new_item_214', 'new_item_240', 'new_item_144',
+    'item_blueflute', 'item_ancientkey', 'item_nightvision',
+    'item_dragon_claw', 'item_lizard_horn', 'item_crystal_ball', 'item_orc_amulet'
+];
 (function initCraftMaterialColors() {
     let seen = new Set();
     for (let npc in CRAFT_RECIPES) {
         (CRAFT_RECIPES[npc] || []).forEach(r => (r.req || []).forEach(q => {
-            if (q.id === 'gold' || q.id === 'sherine_crystal' || seen.has(q.id)) return;
+            if (q.id === 'gold' || q.id === 'sherine_crystal' || QUEST_MATERIAL_IDS.includes(q.id) || seen.has(q.id)) return;
             seen.add(q.id);
             let d = DB.items[q.id];
-            if (d && d.type !== 'wpn' && d.type !== 'arm' && d.type !== 'acc') d.c = 'text-emerald-300';
+            if (d && d.type !== 'wpn' && d.type !== 'arm' && d.type !== 'acc') d.c = 'text-purple-300';
         }));
     }
 })();
