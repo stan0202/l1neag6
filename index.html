@@ -10123,8 +10123,10 @@ function whWithdraw(uidv){
     w.items.splice(idx, 1);
     if(!it.uid || player.inv.some(x => x.uid === it.uid)) it.uid = uid();
     let stack = _whStackFind(player.inv, it);
-    if(stack) stack.cnt += it.cnt; else player.inv.push(it);
-    saveWarehouse(w); saveGame(); renderTabs(true); updateUI();
+    if(stack) stack.cnt += (it.cnt || 1); else player.inv.push(it);
+    // 🔧 先存玩家存檔（已收到物品）再存倉庫（已移除物品）：萬一第二次寫入失敗（如 localStorage 容量爆），
+    //    結果是「物品重複」而非「庫存消失卻沒領到」，避免領取時遺失物品。
+    saveGame(); saveWarehouse(w); renderTabs(true); updateUI();
     renderWarehouseNPC(document.getElementById('interaction-content'));
 }
 function whGold(dir){
