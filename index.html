@@ -668,6 +668,8 @@ const DB = {
         "amr_laia_robe":     { n: "蕾雅長袍", type: "arm", slot: "armor", ac: 2, mmp: 100, req: "mage", safe: 4, p: 58000, gachaWeight: 1 },
         "acc_necro_king_ring": { n: "冥法軍王之戒", type: "acc", slot: "amulet", ac: 0, cha: 3, req: "mage,elf", safe: 0, p: 193000, gachaWeight: 1 },
         "acc_laia_amulet":   { n: "蕾雅項鍊", type: "acc", slot: "amulet", ac: 0, con: -2, int: 1, wis: 1, req: "mage", safe: 0, p: 100000, gachaWeight: 1 },
+        "acc_darkmage_amulet": { n: "黑法師項鍊", type: "acc", slot: "amulet", ac: 0, con: -1, int: 2, req: "mage", safe: 0, p: 100000, gachaWeight: 1 },
+        "acc_summoner_amulet": { n: "喚獸師項鍊", type: "acc", slot: "amulet", ac: 0, wis: -1, cha: 2, req: "mage", safe: 0, p: 100000, gachaWeight: 1 },
         "acc_law_king_chain": { n: "法令軍王之鍊", type: "acc", slot: "amulet", ac: 0, mmp: 15, mpR: 5, req: "mage,elf", safe: 0, p: 100000, gachaWeight: 1 },
         "acc_laia_ring":     { n: "蕾雅戒指", type: "acc", slot: "ring", ac: 5, req: "all", safe: 0, p: 250000, gachaWeight: 1, stunResist: 5, d: "5%機率抵抗暈眩。" },
         "wpn_icequeen_wand": { n: "冰之女王魔杖", type: "wpn", dmgS: 3, dmgL: 4, hit: 5, dmgBonus: 1, spd: 1.0, req: "mage", safe: 6, p: 143340, legend: true, gachaWeight: 1, procSkill: "sk_ice_spike", d: "攻擊時 1% 機率額外施放冰錐（每+1發動機率+1%，不需學習、不耗MP，效果同法師冰錐）。" },
@@ -696,6 +698,7 @@ const DB = {
         "wpn_sword_rasta":  { n: "拉斯塔巴德長劍", type: "wpn", dmgS: 10, dmgL: 12, hit: 1, spd: 1.1, req: "knight,elf,dark", safe: 6, p: 990, gachaWeight: 50 },
         "wpn_dagger_rasta": { n: "拉斯塔巴德短劍", type: "wpn", dmgS: 4, dmgL: 3, hit: 2, spd: 0.8, req: "all", safe: 6, p: 1000, gachaWeight: 80 },
         "wpn_wand_rasta":   { n: "拉斯塔巴德魔杖", type: "wpn", dmgS: 2, dmgL: 3, hit: 0, mdmg: 1, spd: 1.0, req: "mage", safe: 6, p: 10000, gachaWeight: 80 },
+        "wpn_darkmage_wand": { n: "黑法師之杖", type: "wpn", dmgS: 1, dmgL: 1, hit: 0, dmgBonus: 0, mdmg: 2, mpR: 5, spd: 1.0, req: "mage", safe: 6, p: 94510, gachaWeight: 5 },   // 共鳴（見 WAND_LIGHTARROW_IDS）
         "wpn_dual_rasta":   { n: "拉斯塔巴德雙刀", type: "wpn", w2h: true, dmgS: 15, dmgL: 10, hit: 0, spd: 0.8, req: "dark", safe: 6, p: 10000, eff: "combo", gachaWeight: 50 },
         "wpn_xbow_heavy_rasta": { n: "拉斯塔巴德重十字弓", type: "wpn", isBow: true, ranged: true, rapidfire: 45, w2h: true, dmgS: 3, dmgL: 3, hit: 2, dmgBonus: 3, spd: 0.9, req: "elf", safe: 6, p: 5300, gachaWeight: 80 },
         "wpn_spear_rasta":  { n: "拉斯塔巴德矛", type: "wpn", dmgS: 8, dmgL: 8, hit: 0, spd: 1.1, req: "knight,elf", safe: 6, p: 1800, gachaWeight: 100 },
@@ -796,6 +799,8 @@ const DB = {
         "bot_rasta": { n: "拉斯塔巴德長靴", type: "arm", slot: "boots", ac: 2, req: "all", safe: 4, p: 380, gachaWeight: 100 },
         "clk_dark": { n: "黑暗斗篷", type: "arm", slot: "cloak", ac: 3, mhp: 30, req: "dark", safe: 4, p: 6350, gachaWeight: 60 },
         "amr_rasta_robe": { n: "拉斯塔巴德長袍", type: "arm", slot: "armor", ac: 4, mpR: 5, req: "mage", safe: 4, p: 14000, gachaWeight: 10 },
+        "amr_darkmage_robe": { n: "黑法師長袍", type: "arm", slot: "armor", ac: 4, mmp: 5, mpR: 5, req: "mage", safe: 4, p: 53100, gachaWeight: 10 },
+        "amr_summoner_robe": { n: "喚獸師長袍", type: "arm", slot: "armor", ac: 4, mhp: 5, mpR: 5, req: "mage", safe: 4, p: 53100, gachaWeight: 10 },
         "shd_rasta": { n: "拉斯塔巴德圓盾", type: "arm", slot: "shield", ac: 2, req: "all", safe: 4, p: 500, gachaWeight: 100, block: 35 },
         "arm_101": { n: "克特手套", type: "arm", slot: "gloves", ac: 2, req: "knight", safe: 4, p: 17500, gachaWeight: 1 },
         "arm_102": { n: "保護者手套", type: "arm", slot: "gloves", ac: 0, req: "elf", safe: 4, p: 4500, mhp: 20, mmp: 20, gachaWeight: 30 },
@@ -1407,6 +1412,7 @@ const DB = {
         "de_train_hellhound": { n: "地獄束縛犬", lv: 40, s: "S", beh: "主動", race: "惡魔", e: "earth", hp: 657, ac: -40, mr: 0, exp: 1601, goldMin: 110, goldMax: 300, atkSpd: 1, dmg: [1, 39], db: 20, hit: 20, tamedByAura: true, mag: { skn: "火焰噴吐", cd: 70, dmg: [4, 30], db: 28, ele: "fire", alwaysHit: true } },
         "de_train_soulknight": { n: "魂騎士", lv: 41, s: "S", beh: "主動", race: "拉斯塔巴德", e: "earth", hp: 1080, ac: -43, mr: 50, exp: 1682, goldMin: 110, goldMax: 300, atkSpd: 1, dmg: [1, 41], db: 25, hit: 24, mag: { skn: "地面震裂", cd: 70, dmg: [3, 40], db: 18, ele: "earth", alwaysHit: true } },
         "de_train_hellslave": { n: "地獄奴隸", lv: 43, s: "S", beh: "主動", race: "拉斯塔巴德", e: "earth", hp: 962, ac: -41, mr: 45, exp: 1850, goldMin: 110, goldMax: 300, atkSpd: 1, dmg: [1, 43], db: 30, hit: 25 },
+        "de_train_summoner": { n: "喚獸師", lv: 30, s: "S", beh: "主動", race: "拉斯塔巴德", e: "earth", hp: 600, ac: -28, mr: 35, exp: 962, goldMin: 10, goldMax: 200, atkSpd: 2, dmg: [2, 32], db: 20, hit: 15 },
         "de_train_gatekeeper": { n: "拉斯塔巴德守門人", lv: 40, s: "S", beh: "主動", race: "黑暗妖精", e: "none", hp: 800, ac: -27, mr: 30, exp: 1601, goldMin: 110, goldMax: 400, atkSpd: 1.5, dmg: [2, 40], db: 15, hit: 25 },
         // ===== 魔獸軍王之室（純BOSS房，需軍王的鑰匙入場） =====
         "de_king_baranka": { n: "魔獸軍王巴蘭卡", lv: 63, s: "L", beh: "被動", race: "拉斯塔巴德", e: "water", boss: true, hard: true, hp: 17290, ac: -58, mr: 65, exp: 39700, goldMin: 1250, goldMax: 4000, atkSpd: 0.5, dmg: [3, 63], db: 63, hit: 63 },
@@ -1416,6 +1422,7 @@ const DB = {
         "de_lab_wind":  { n: "風元素守護者", lv: 42, s: "S", beh: "主動", race: "元素", elem: true, e: "wind",  hp: 725, ac: -37, mr: 60, exp: 1765, goldMin: 100, goldMax: 300, atkSpd: 3, dmg: [3, 39], db: 75, hit: 27 },
         "de_lab_fire":  { n: "火元素守護者", lv: 42, s: "S", beh: "主動", race: "元素", elem: true, e: "fire",  hp: 725, ac: -37, mr: 60, exp: 1765, goldMin: 100, goldMax: 300, atkSpd: 3, dmg: [3, 39], db: 75, hit: 27 },
         "de_lab_mage":  { n: "黑暗妖精法師", lv: 40, s: "S", beh: "主動", race: "黑暗妖精", e: "none", hp: 500, ac: -32, mr: 70, exp: 1601, goldMin: 10, goldMax: 100, atkSpd: 2, dmg: [2, 39], db: 5, hit: 20, mag: { skn: "冰錐", cd: 70, dmg: [4, 30], db: 28, ele: "water", alwaysHit: true }, mag2: { skn: "龍捲風", cd: 90, chance: 0.5, dmg: [4, 30], db: 40, ele: "wind", alwaysHit: true } },
+        "de_lab_blackmage": { n: "黑法師", lv: 32, s: "S", beh: "主動", race: "黑暗妖精", e: "none", hp: 380, ac: -22, mr: 25, exp: 1025, goldMin: 120, goldMax: 200, atkSpd: 2, dmg: [2, 21], db: 18, hit: 13, mag: { skn: "極寒冰錐", cd: 60, dmg: [3, 26], db: 40, ele: "water", alwaysHit: true, sec: { type: "freeze", pbase: 100 } } },   // 🔧 極寒冰錐：必中、3D26+40水魔法，freeze pbase100 → (100-MR)/2% 機率冰凍6秒
         // ===== 冥法軍訓練場 =====
         "de_necro_avenger":    { n: "黑暗復仇者", lv: 45, s: "S", beh: "主動", race: "拉斯塔巴德", e: "earth", hard: true, hp: 1056, ac: -52, mr: 55, exp: 2026, goldMin: 100, goldMax: 300, atkSpd: 1, dmg: [1, 45], db: 39, hit: 29 },
         "de_necro_warlock":    { n: "血色術士", lv: 46, s: "S", beh: "主動", race: "拉斯塔巴德", e: "earth", hard: true, hp: 1198, ac: -54, mr: 70, exp: 2117, goldMin: 110, goldMax: 300, atkSpd: 2, dmg: [2, 46], db: 25, hit: 24, mag: { skn: "黑霧", cd: 50, dmg: [4, 46], db: 35, ele: "none", alwaysHit: true } },
@@ -1832,12 +1839,12 @@ const DB = {
         "rastabad_cave2": ["de_remnant_bow", "de_remnant_sword", "de_remnant_xbow", "de_remnant_mage", "de_remnant_2h"],
         "rastabad_cave3": ["de_remnant_bow", "de_remnant_sword", "de_remnant_xbow", "de_remnant_mage", "de_remnant_2h", "dark_spirit_caller"],
         "rastabad_gate": ["de_gate_xbow", "de_gate_apprentice", "de_gate_spear", "de_gate_patrol", "de_gate_soldier", "de_gate_general"],
-        "rastabad_beast": ["de_gate_general", "de_train_blacktiger", "de_train_tamer", "de_train_cursetamer", "de_train_hellhound", "de_train_soulknight", "de_train_hellslave", "de_train_gatekeeper"],
+        "rastabad_beast": ["de_gate_general", "de_train_blacktiger", "de_train_tamer", "de_train_cursetamer", "de_train_hellhound", "de_train_soulknight", "de_train_hellslave", "de_train_summoner", "de_train_gatekeeper"],
         "king_baranka_room": ["de_king_baranka"],
         "law_king_room": ["de_king_laia"],
         "necro_king_room": ["de_king_heruby"],
         "assassin_king_room": ["de_king_slayer"],
-        "dark_magic_lab": ["de_lab_earth", "de_lab_water", "de_lab_wind", "de_lab_fire", "de_lab_mage", "de_train_gatekeeper"],
+        "dark_magic_lab": ["de_lab_earth", "de_lab_water", "de_lab_wind", "de_lab_fire", "de_lab_mage", "de_lab_blackmage", "de_train_gatekeeper"],
         "necro_training": ["de_necro_avenger", "de_necro_warlock", "de_necro_omwarrior", "de_necro_darklord", "de_necro_bloodknight", "de_necro_omheavy", "de_train_gatekeeper"],
         "antaras_lair": ["antaras"],
         "fafurion_lair": ["fafurion"],
@@ -1872,9 +1879,9 @@ const DB = {
         '狂暴的歐姆': [['potion_haste', 1], ['scroll_revive', 1]],
         '歐姆裝甲兵': [['wpn_xbow_rasta', 0.2]],
         '狂暴的歐姆裝甲兵': [['wpn_xbow_rasta', 0.2], ['potion_haste', 1], ['potion_brave', 1], ['scroll_weapon', 0.5], ['scroll_armor', 1]],
-        '黑暗妖精殘兵(弓)': [['wpn_small_katana', 0.1], ['wpn_bow_rasta', 0.5], ['arm_rasta_leather', 2], ['bot_rasta', 1], ['potion_haste', 1], ['new_item_140', 1]],
+        '黑暗妖精殘兵(弓)': [['wpn_small_katana', 0.1], ['wpn_bow_rasta', 0.5], ['arm_rasta_leather', 2], ['bot_rasta', 1], ['potion_haste', 1], ['new_item_140', 1], ['quest_ring_darkdweller', 0.1]],
         '黑暗妖精殘兵(劍)': [['wpn_sword_rasta', 0.5], ['clk_dark', 0.1], ['arm_rasta_leather', 3], ['bot_rasta', 2], ['potion_haste', 1], ['potion_brave', 1], ['scroll_weapon', 0.5], ['scroll_armor', 1], ['bk_berserk', 0.1], ['bk_dark_str', 1], ['bk_dark_burn', 0.5], ['bk_dark_erup', 0.1]],
-        '黑暗妖精殘兵(十字弓)': [['wpn_dagger_rasta', 0.5], ['wpn_xbow_rasta', 1], ['potion_haste', 1], ['new_item_140', 1], ['scroll_weapon', 0.5], ['scroll_armor', 1], ['bk_holy_dash', 0.1], ['bk_dark_stealth', 1], ['bk_dark_poison', 1], ['bk_dark_str', 1], ['bk_dark_crit', 0.1], ['bk_dark_erup', 0.1]],
+        '黑暗妖精殘兵(十字弓)': [['wpn_dagger_rasta', 0.5], ['wpn_xbow_rasta', 1], ['potion_haste', 1], ['new_item_140', 1], ['scroll_weapon', 0.5], ['scroll_armor', 1], ['bk_holy_dash', 0.1], ['bk_dark_stealth', 1], ['bk_dark_poison', 1], ['bk_dark_str', 1], ['bk_dark_crit', 0.1], ['bk_dark_erup', 0.1], ['quest_ring_darkdweller', 0.1]],
         '黑暗妖精殘兵(法師)': [['wpn_wand_rasta', 0.5], ['amr_rasta_robe', 0.1], ['potion_haste', 1], ['potion_blue', 1], ['new_item_140', 1], ['bk_dark_dex', 1]],
         '黑暗妖精殘兵(雙手劍)': [['wpn_dual_rasta', 0.5]],
         '黑暗精靈使': [['potion_haste', 1], ['new_item_140', 1], ['scroll_weapon', 0.5], ['scroll_armor', 1], ['bk_holy_barrier', 0.005], ['bk_dark_stealth', 1], ['bk_dark_poison', 1], ['bk_dark_mrup', 1], ['bk_dark_burn', 1], ['bk_dark_poisonres', 0.5], ['bk_dark_double', 0.05], ['bk_dark_fang', 0.1], ['bk_dark_crit', 0.5], ['quest_ring_elfcaller', 0.001]],
@@ -1893,6 +1900,7 @@ const DB = {
         '地獄束縛犬': [['potion_haste', 1], ['quest_ring_beasttamer', 0.05], ['mat_legion_beast', 0.05]],
         '魂騎士': [['wpn_official_2h', 0.01], ['glv_official', 0.05], ['bot_official', 0.05], ['blt_dark', 0.05], ['potion_haste', 1], ['quest_ring_beasttamer', 0.05], ['mat_legion_beast', 0.05]],
         '地獄奴隸': [['potion_haste', 1], ['mat_legion_beast', 0.05]],
+        '喚獸師': [['amr_summoner_robe', 0.01], ['acc_summoner_amulet', 0.001], ['quest_ring_summoner', 0.01]],
         // ===== 魔獸軍王之室 BOSS =====
         '魔獸軍王巴蘭卡': [['wpn_baranka_claw', 1], ['wpn_baranka_steelclaw', 0.1], ['hlm_official', 2], ['hlm_baranka', 0.1], ['amr_official', 2], ['amr_baranka', 0.1], ['glv_official', 3], ['glv_baranka', 1], ['bot_kingbeast', 0.1], ['bot_official', 3], ['bot_baranka', 0.1], ['blt_dark', 5], ['potion_haste', 1], ['mat_legion_beast', 100], ['mat_crest_beast', 10]],
         '法令軍王蕾雅': [['wpn_laia_wand', 0.03], ['wpn_priest_wand', 3], ['hlm_priest', 3], ['amr_laia_robe', 0.1], ['amr_kinglaw', 0.1], ['amr_priest', 3], ['glv_priest', 3], ['bot_priest', 3], ['acc_laia_amulet', 0.1], ['acc_law_king_chain', 0.1], ['acc_laia_ring', 0.05], ['blt_dark', 1], ['mat_legion_law', 100], ['mat_crest_law', 10]],
@@ -1904,6 +1912,7 @@ const DB = {
         '風元素守護者': [['mat_legion_law', 0.05], ['mat_wind_breath', 0.1]],
         '火元素守護者': [['mat_legion_law', 0.05], ['mat_fire_breath', 0.1]],
         '黑暗妖精法師': [['mat_legion_law', 0.05], ['wpn_wand_rasta', 1], ['amr_rasta_robe', 0.1], ['potion_haste', 1], ['new_item_140', 1], ['bk_dark_dex', 1], ['bk_tornado', 0.05], ['bk_ice_spike', 1]],
+        '黑法師': [['wpn_darkmage_wand', 0.01], ['amr_darkmage_robe', 0.05], ['acc_darkmage_amulet', 0.001], ['quest_ring_darkmage', 0.01]],
         // ===== 冥法軍訓練場 =====
         '黑暗復仇者': [['wpn_dark_sword', 0.01], ['amr_official', 0.05], ['mat_legion_necro', 0.1]],
         '血色術士': [['wpn_red_crystalwand', 0.1], ['hlm_priest', 0.05], ['amr_priest', 0.05], ['amr_dark_cape', 1], ['bot_priest', 0.05], ['potion_haste', 1], ['mat_legion_necro', 0.1]],
@@ -3427,20 +3436,25 @@ function tick() {
         let isPureBossMap = PURE_BOSS_MAPS.includes(mapState.current) && !KING_ROOMS[mapState.current];   // 🔧 軍王之室仍屬純BOSS房(免自動瞬移/追蹤)，但版面用三格
         if(!mapState.spawnAt) mapState.spawnAt = [null, null, null];
         let nowT = state.ticks;
-        for(let i=0; i<3; i++) {
-            if(mapState.mobs[i]) { mapState.spawnAt[i] = null; continue; } // 有怪：清除排程
-            if(isPureBossMap && i !== 1) continue;                          // 純 BOSS 房只生中央
-            let delay;
-            if(isPureBossMap) {
-                delay = 1800;                                               // 🔧 純BOSS房：BOSS死亡後固定 3 分鐘(1800 tick=180秒)才刷新，不受日光術/席琳的世界加速影響
-            } else if(KING_ROOMS[mapState.current]) {
-                delay = 50;                                                 // 🔧 軍王之室：固定 5 秒復活，不受日光術/席琳的世界加速影響
-            } else {
-                delay = (player.buffs.sk_sunlight > 0) ? 10 : 50;          // 50 tick = 5 秒（日光術約 1 秒）
-                if (sherineWorldActive() && !isSiegeArea(mapState.current)) delay = Math.max(1, delay - 10);   // 🔮 席琳的世界：搜索時間 −1 秒（與日光術疊加）
+        if(KING_ROOMS[mapState.current] && state._kbRespawnAt != null) {
+            // 🔧 軍王之室復活等待中：30 秒內不刷任何怪；時間到則消耗 1 把鑰匙、從頭重生軍王與兩側小怪（補跑期間延後到即時再執行）
+            if(!state.ff && nowT >= state._kbRespawnAt) { state._kbRespawnAt = null; kbRoomRespawn(); }
+        } else {
+            for(let i=0; i<3; i++) {
+                if(mapState.mobs[i]) { mapState.spawnAt[i] = null; continue; } // 有怪：清除排程
+                if(isPureBossMap && i !== 1) continue;                          // 純 BOSS 房只生中央
+                let delay;
+                if(isPureBossMap) {
+                    delay = 1800;                                               // 🔧 純BOSS房：BOSS死亡後固定 3 分鐘(1800 tick=180秒)才刷新，不受日光術/席琳的世界加速影響
+                } else if(KING_ROOMS[mapState.current]) {
+                    delay = 50;                                                 // 🔧 軍王之室：固定 5 秒復活，不受日光術/席琳的世界加速影響
+                } else {
+                    delay = (player.buffs.sk_sunlight > 0) ? 10 : 50;          // 50 tick = 5 秒（日光術約 1 秒）
+                    if (sherineWorldActive() && !isSiegeArea(mapState.current)) delay = Math.max(1, delay - 10);   // 🔮 席琳的世界：搜索時間 −1 秒（與日光術疊加）
+                }
+                if(mapState.spawnAt[i] == null) mapState.spawnAt[i] = nowT + delay; // 空格剛出現：排程 delay 後（一般 5 秒；純BOSS房 3 分鐘）
+                if(nowT >= mapState.spawnAt[i]) { spawnMob(i); mapState.spawnAt[i] = null; }
             }
-            if(mapState.spawnAt[i] == null) mapState.spawnAt[i] = nowT + delay; // 空格剛出現：排程 delay 後（一般 5 秒；純BOSS房 3 分鐘）
-            if(nowT >= mapState.spawnAt[i]) { spawnMob(i); mapState.spawnAt[i] = null; }
         }
     }
     
@@ -3757,10 +3771,10 @@ function spawnMob(idx) {
             if (uniquePool.length > 0) safePool = uniquePool;
         }
         mobId = safePool[Math.floor(Math.random() * safePool.length)];
-        // 血盟特殊敵人：已加入任一血盟陣營者，於非BOSS房狩獵地區有 0.1% 機率遇到敵對血盟。
+        // 血盟特殊敵人：已加入任一血盟陣營者，於非BOSS房狩獵地區有 0.3% 機率遇到敵對血盟。
         // 兩陣營遇到的敵人相同；排除「與自己性別職業對應」的血盟敵人；依詩蒂陣營玩家不論職業都不會遇到依詩蒂本人。
         // 從符合條件者中平均抽一隻；場上可同時有多隻不同名的血盟敵人，但不會有同名兩隻。
-        if(player.bloodPledge && !PURE_BOSS_MAPS.includes(mapState.current) && !isSiegeArea(mapState.current) && Math.random() < 0.001) {
+        if(player.bloodPledge && !PURE_BOSS_MAPS.includes(mapState.current) && !isSiegeArea(mapState.current) && Math.random() < 0.003) {
             let onField = mapState.mobs.filter(m => m).map(m => m.n);
             let candidates = Object.keys(DB.mobs).filter(id => {
                 let d = DB.mobs[id];
@@ -4015,7 +4029,7 @@ function consumeArrow() {
 }
 
 // ===== 法杖共鳴：裝備指定魔法杖時，一般攻擊(不論命中與否)有 智力/60 機率免費施展光箭 =====
-const WAND_LIGHTARROW_IDS = ['wpn_oakwand', 'wpn_38', 'wpn_witchwand', 'wpn_manawand', 'wpn_crystalwand', 'wpn_baless', 'wpn_wand_rasta', 'wpn_red_crystalwand', 'wpn_laia_wand', 'wpn_icequeen_wand', 'wpn_demon_scythe'];   // 🏅 共鳴：含蕾雅魔杖／冰之女王魔杖／惡魔鐮刀
+const WAND_LIGHTARROW_IDS = ['wpn_oakwand', 'wpn_38', 'wpn_witchwand', 'wpn_manawand', 'wpn_crystalwand', 'wpn_baless', 'wpn_wand_rasta', 'wpn_red_crystalwand', 'wpn_laia_wand', 'wpn_icequeen_wand', 'wpn_demon_scythe', 'wpn_darkmage_wand'];   // 🏅 共鳴：含蕾雅魔杖／冰之女王魔杖／惡魔鐮刀／黑法師之杖
 function wandLightArrowProc(target) {
     let wpn = player.eq.wpn;
     if (!wpn || !WAND_LIGHTARROW_IDS.includes(wpn.id)) return;
@@ -5429,8 +5443,23 @@ function settleDeadMobs() {
         }
     }
     if (changed) renderMobs();
-    // 🔧 魔獸軍王之室：擊敗頭目（掉落已於 killMob 發放）後傳送回村/回城；補跑期間延後到回到即時再執行
-    if (state._kbVictory && !state.ff) { state._kbVictory = false; kbVictoryTeleport(); }
+    // 🔧 軍王之室：擊敗頭目（掉落已於 killMob 發放）後處理；補跑期間延後到回到即時再執行。
+    //   身上仍有「軍王的鑰匙」→ 留在室內，清空全部怪物，30 秒後消耗 1 把鑰匙從頭復活軍王；
+    //   無鑰匙 → 傳送回村/回城（原行為）。
+    if (state._kbVictory && !state.ff) {
+        state._kbVictory = false;
+        let _hasKey = KING_ROOMS[mapState.current] && player.inv.some(i => i.id === 'item_king_key' && (i.cnt || 1) >= 1);
+        if (_hasKey) {
+            mapState.mobs = [null, null, null];
+            mapState.spawnAt = [null, null, null];
+            mapState.targetIdx = -1;
+            state._kbRespawnAt = state.ticks + 300;   // 30 秒（300 tick）後復活
+            renderMobs(); updateUI();
+            logSys('<span class="text-amber-300 font-bold">⚔ 軍王已倒下！室內怪物盡數消散…</span> 30 秒後將消耗 <span class="text-amber-300">1 把軍王的鑰匙</span>，軍王再度甦醒。');
+        } else {
+            kbVictoryTeleport();
+        }
+    }
 }
 // 🔧 魔獸軍王之室：擊敗巴蘭卡後的傳送（目的地同「回村/回城」按鈕：攻城獲勝→獲勝城池城堡，否則→職業/血盟起始村）
 function kbVictoryTeleport() {
@@ -5441,6 +5470,20 @@ function kbVictoryTeleport() {
     if (!player.lastMapByCat) player.lastMapByCat = {};
     player.lastMapByCat.special = 'training';
     saveGame();        // 傳送後存檔，使重新載入時人物位於村莊（而非已清空的BOSS房）
+}
+// 🔧 軍王之室：等待 30 秒後消耗 1 把「軍王的鑰匙」，從頭重生中央軍王與兩側小怪；沒鑰匙則保險傳送回村/回城
+function kbRoomRespawn() {
+    if (!KING_ROOMS[mapState.current]) { state._kbRespawnAt = null; return; }
+    let _ki = player.inv.findIndex(i => i.id === 'item_king_key' && (i.cnt || 1) >= 1);
+    if (_ki < 0) { kbVictoryTeleport(); return; }   // 等待期間鑰匙意外用罄：傳送回村/回城
+    let _kit = player.inv[_ki];
+    if ((_kit.cnt || 1) > 1) _kit.cnt -= 1; else player.inv.splice(_ki, 1);
+    spawnMob(1); spawnMob(0); spawnMob(2);          // 中央軍王 + 兩側小怪，全新滿血
+    mapState.spawnAt = [null, null, null];
+    mapState.targetIdx = -1;
+    renderTabs(true); renderMobs(); updateUI();
+    logSys('<span class="text-amber-300 font-bold">你消耗了 1 把 軍王的鑰匙，軍王再度甦醒！</span>');
+    saveGame();
 }
 
 function checkLvUp() {
@@ -9699,6 +9742,7 @@ function changeMap(force) {
     mapState.current = document.getElementById('map-select').value;
     { let _c = mapCategoryOf(mapState.current); if(_c) { if(!player.lastMapByCat) player.lastMapByCat = {}; player.lastMapByCat[_c] = mapState.current; } }   // 記住各分類最後到過的地圖
     mapState.mobs = [null, null, null];
+    state._kbRespawnAt = null;    // 🔧 離開/進入任何地圖即取消軍王之室未完成的復活倒數（避免殘留狀態）
     mapState.forceBoss = false;   // 🔧 傳送戒指的必出BOSS僅在施放傳送的當下有效：換地圖即失效，需再次手動施放傳送術
     if(typeof auditReset === 'function') auditReset();   // 換地圖：效率統計重置
     
