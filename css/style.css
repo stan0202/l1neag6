@@ -120,9 +120,9 @@
         /* 🔒 防忽大忽小：怪圖(height:100%)以「框高」為準＝原3格大小(框高鎖 1920/580 比例·與格數無關)；切勿用 max-width:none(會讓已載入怪圖的自然尺寸回灌 flex intrinsic→怪數變動時整框/背景重算抖動)。min-width/min-height:0＝flex 項不被內容撐大 */
         #battle-view.area-fit .mob-target { min-width: 0; }
         #battle-view.area-fit { min-height: 0; }
-        #battle-view .mob-back .mob-img-inner { transform: translateY(-24px); transform-origin: bottom center; }                      /* 後排：維持原 3 格大小(框高)、僅上提→看起來在後方 */
+        #battle-view .mob-back .mob-img-inner { transform: translateY(-24px) scale(1.1); transform-origin: bottom center; }                      /* 後排：放大 1.1×＋上提→看起來在後方(影子＝::after 內層偽元素隨 scale 一起放大) */
         #battle-view.area-fit .mob-back .mob-img-inner::after { bottom: 18px; }   /* 🦶 後排怪上提後，影子再往上移對齊後排腳底(原4px→18px·後排專屬·避免影子留在圖下方浮空·數值可調) */
-        #battle-view .mob-front:not(.boss-zoom) .mob-img-inner { transform: translateY(6px) scale(1.1); transform-origin: bottom center; }   /* 前排：比原本稍大(1.1×)、略下→看起來在前方(頭目除外·保留 1.78×) */
+        #battle-view .mob-front:not(.boss-zoom) .mob-img-inner { transform: translateY(6px) scale(1.3); transform-origin: bottom center; }   /* 前排：放大 1.3×、略下→看起來在前方(頭目除外·保留 1.78×；影子＝::after 內層偽元素隨 scale 一起放大) */
         #battle-view.area-fit .mob-back.boss-zoom .mob-img-inner { transform: translateY(-24px) scale(1.78); transform-origin: bottom center; }   /* 👑 後排頭目：保留後排上提(-24)＋頭目放大1.78× */
         #battle-view .mob-back.boss-zoom { z-index: 4; }                                                                                          /* 後排頭目提到前排(z2)之上，避免大圖被前排小怪遮住 */
         #town-view.has-bg { background-size: cover; background-position: center; border-radius: 0.5rem; }
