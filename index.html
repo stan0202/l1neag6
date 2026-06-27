@@ -26,6 +26,8 @@
       })();
     </script>
     <title>放置天堂 - 以血為盟</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">   <!-- 🖼️ 瀏覽器分頁圖示(favicon)：把你的圖放到 assets/favicon.png 即生效；可改 href 路徑或副檔名(.ico/.svg) -->
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -211,7 +213,7 @@
     <div class="flex items-center gap-3">
         <button onclick="revive()" id="btn-revive" class="hidden bg-red-800 hover:bg-red-700 px-6 py-1.5 text-white font-bold border border-red-500 rounded anim-flash text-base shadow-md">祈求復活</button>
         <button onclick="reviveInPlace()" id="btn-revive-inplace" class="hidden bg-yellow-700 hover:bg-yellow-600 px-6 py-1.5 text-white font-bold border border-yellow-500 rounded anim-flash text-base shadow-md">原地復活</button>
-        <button onclick="playerTeleport()" id="btn-teleport" class="hidden bg-fuchsia-800 hover:bg-fuchsia-700 px-3 py-1 text-white font-bold border border-fuchsia-500 rounded text-sm shadow-md whitespace-nowrap min-w-[3.25rem] text-center" title="傳送術／瞬間移動卷軸（於對應地圖可進入隱藏狩獵區域）">順移</button>
+        <button onclick="playerTeleport()" id="btn-teleport" class="hidden bg-fuchsia-800 hover:bg-fuchsia-700 px-3 py-1 text-white font-bold border border-fuchsia-500 rounded text-sm shadow-md whitespace-nowrap min-w-[3.25rem] text-center" title="傳送術／瞬間移動卷軸（於對應地圖可進入隱藏狩獵區域）">瞬移</button>
         <button onclick="returnToTown()" id="btn-return-town" class="bg-emerald-800 hover:bg-emerald-700 px-3 py-1 text-white font-bold border border-emerald-500 rounded text-sm shadow-md whitespace-nowrap min-w-[3.25rem] text-center">回村</button>
         <select id="map-category" class="bg-slate-800 border border-slate-600 text-white px-3 py-1.5 text-base rounded outline-none" onchange="onMapCategoryChange()">
             <option value="village">村莊</option>
@@ -360,6 +362,18 @@
         </div>
     </div>
 
+    <!-- 🎴 卡片收集冊 全螢幕書頁（蓋住全版面，底下戰鬥照跑）-->
+    <div id="card-book" class="hidden fixed inset-0 z-[45] bg-black/75 backdrop-blur-sm flex items-center justify-center p-3" onclick="cardBookBackdrop(event)">
+        <div class="w-full max-w-5xl max-h-[92vh] flex flex-col bg-slate-900/95 rounded-2xl border-2 border-amber-900/60 shadow-[0_0_60px_rgba(0,0,0,0.85)] overflow-hidden">
+            <div class="flex items-center justify-between px-5 py-3 border-b border-slate-700 bg-gradient-to-b from-[#3a2f12] to-[#241c0c]">
+                <h2 class="text-2xl font-bold text-amber-300 tracking-wide">🎴 卡片收集冊</h2>
+                <button onclick="closeCardBook()" class="btn px-3 py-1.5 bg-slate-700 hover:bg-slate-600 border-slate-500 text-slate-200 font-bold">✕ 關閉</button>
+            </div>
+            <div id="card-book-tabs" class="flex flex-wrap gap-1.5 px-4 py-2.5 border-b border-slate-700 bg-slate-900/80"></div>
+            <div id="card-book-body" class="flex-1 overflow-y-auto p-4"></div>
+        </div>
+    </div>
+
 <script src="js/00-data.js"></script>
 <script src="js/01-drops-config.js"></script>
 <script src="js/02-stats-recompute.js"></script>
@@ -375,5 +389,6 @@
 <script src="js/12-npc-quests.js"></script>
 <script src="js/13-shop-save.js"></script>
 <script src="js/14-craft-pandora.js"></script>
+<script src="js/15-cards.js"></script>
 </body>
 </html>
